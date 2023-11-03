@@ -46,7 +46,6 @@
 
 import request from "@/api";
 import router from "@/router";
-import CryptoJS from 'crypto-js'
 
 export default {
   name: "login",
