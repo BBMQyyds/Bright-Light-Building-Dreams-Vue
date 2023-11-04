@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "children-qualification-review"
+  name: "children-review"
 }
 </script>
 

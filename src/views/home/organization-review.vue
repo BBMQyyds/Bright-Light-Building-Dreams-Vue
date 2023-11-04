@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "organization-qualification-review"
+  name: "organization-review"
 }
 </script>
 

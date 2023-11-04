@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "children-account-management"
+  name: "children-management"
 }
 </script>
 

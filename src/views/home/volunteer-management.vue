@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "volunteer-account-management"
+  name: "volunteer-management"
 }
 </script>
 

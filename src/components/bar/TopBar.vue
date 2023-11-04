@@ -97,13 +97,13 @@ export default {
 }
 
 .logo {
-  margin-left: 2%;
-  margin-right: 2%;
-  width: 100px;
+  margin-left: 1%;
+  margin-right: 1%;
+  width: 80px;
 }
 
 .menu {
-  flex: 11;
+  flex: 10;
   background: transparent;
 
   .el-menu-item {
@@ -174,7 +174,7 @@ a {
 .user{
   flex: 1;
   text-align: right;
-  margin-right: 1%;
+  margin-right: 2%;
   font-size: 16px;
   font-weight: bold;
 }
