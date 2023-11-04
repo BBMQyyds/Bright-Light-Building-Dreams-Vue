@@ -82,7 +82,7 @@ export default {
 <style lang="scss" scoped>
 
 .messageIndex {
-  z-index: 20000 !important;
+  z-index: 100 !important;
 }
 
 .top-bar {
