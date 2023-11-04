@@ -97,7 +97,7 @@ export default {
             username: this.user.username,
             password: this.user.password,
           })).then(res => {
-            if (res.data !== null && 'username' in res.data && res.data.username !== null) {
+            if (res.data !== null && 'username' in res.data.result && res.data.result.username !== null) {
               this.$message({
                 message: '登录成功！',
                 type: 'success',
