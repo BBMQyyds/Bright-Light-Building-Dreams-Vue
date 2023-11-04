@@ -56,7 +56,6 @@
           <i class="el-icon-s-management"></i>物资管理
         </el-menu-item>
       </router-link>
-
     </el-menu>
     <span class="user">
       你好，<a class="username">{{this.$store.state.user.name}}</a>！

@@ -40,11 +40,19 @@
         :total="inputChildList.length"
         @current-change="handleCurrentPageChange">
     </el-pagination>
+      <div id="button">
+          <el-button
+          type="primary"
+          @click="LoginOut"
+          >退出登录</el-button>
+      </div>
   </div>
 </template>
 
 
 <script>
+import router from "@/router";
+
 export default {
   data() {
     return {
@@ -169,6 +177,12 @@ export default {
     editChild(child) {
 
     },
+      LoginOut(){
+          router.push({
+              path: '/login',
+          });
+          sessionStorage.removeItem("token");
+      },
     deleteChild(child) {
       // 弹出确认框
       this.$confirm('此操作将永久删除该儿童账户, 是否继续?', '提示', {
@@ -241,4 +255,7 @@ export default {
     padding-top: 8px;
   }
 }
+    #button{
+      margin-left: 90%;
+    }
 </style>
