@@ -1,24 +1,27 @@
 <template>
-  <div class="home">
-    <div class="content">
-      <router-view v-slot="{ Component }">
-        <keep-alive>
-          <component :is="Component" v-if="$route.meta.keepAlive" :key="$route.path"/>
-        </keep-alive>
-        <component :is="Component" v-if="!$route.meta.keepAlive" :key="$route.path"/>
-      </router-view>
+  <div class="home-bg">
+    <div class="home">
+      <TopBar/>
+      <div class="content">
+        <router-view v-slot="{ Component }">
+          <keep-alive>
+            <component :is="Component" v-if="$route.meta.keepAlive" :key="$route.path"/>
+          </keep-alive>
+          <component :is="Component" v-if="!$route.meta.keepAlive" :key="$route.path"/>
+        </router-view>
+      </div>
+      <BottomBar/>
     </div>
-    <BottomBar/>
   </div>
 </template>
 
 <script>
-import BottomBar from "@/components/bar/BottomBar.vue";
+import TopBar from "@/components/bar/TopBar.vue";
 
 export default {
   name: "home",
   components: {
-    BottomBar,
+    TopBar,
   },
   data() {
     return {
@@ -30,8 +33,23 @@ export default {
 </script>
 
 <style scoped>
+
 .messageIndex {
   z-index: 20000 !important;
+}
+
+.home-bg {
+  background: url("../assets/img/main.jpg");
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+}
+
+.home {
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  background: rgba(255, 255, 255, 0.65);
 }
 
 .home {
@@ -44,4 +62,5 @@ export default {
   flex: 1;
   margin-top: 57px;
 }
+
 </style>

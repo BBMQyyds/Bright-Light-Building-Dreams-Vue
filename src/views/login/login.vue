@@ -50,18 +50,18 @@ import router from "@/router";
 export default {
   name: "login",
   created() {
-    if (localStorage.getItem("username") !== null && localStorage.getItem("password") !== null) {
-      this.user.username = localStorage.getItem("username");
-      this.user.password = localStorage.getItem("password");
-      if (localStorage.getItem("auto") !== null) {
-        this.auto = true;
-      }
-    }
+    // if (localStorage.getItem("username") !== null && localStorage.getItem("password") !== null) {
+    //   this.user.username = localStorage.getItem("username");
+    //   this.user.password = localStorage.getItem("password");
+    //   if (localStorage.getItem("auto") !== null) {
+    //     this.auto = true;
+    //   }
+    // }
   },
   mounted() {
-    if (localStorage.getItem("auto") !== null) {
-      this.login();
-    }
+    // if (localStorage.getItem("auto") !== null) {
+    //   this.login();
+    // }
   },
   data() {
     return {
@@ -104,6 +104,7 @@ export default {
                 offset: 50,
                 duration: 500
               });
+              this.$store.commit('setUser', res.data.result);
               //自动登录
               if (this.auto) {
                 localStorage.setItem("username", this.user.username);
@@ -117,21 +118,12 @@ export default {
 
               sessionStorage.setItem("token", res.data.id);
 
-              if (res.data.username !== 'admin') {
-                router.push({
-                  path: '/project',
-                  query: {
-                    id: res.data.id
-                  }
-                })
-              } else {
-                router.push({
-                  path: '/user',
-                  query: {
-                    username: res.data.username
-                  }
-                })
-              }
+              router.push({
+                path: '/home/children-management',
+                query: {
+                  id: res.data.id
+                }
+              })
             } else {
               this.$message({
                 message: '用户名或密码不正确，请重新输入',

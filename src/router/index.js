@@ -1,17 +1,6 @@
 // 导入用来创建路由和确定路由模式的两个方法
 import {createRouter, createWebHashHistory} from 'vue-router';
 import store from '../store';
-import MainPage from "@/components/home/MainPage";
-import LibraryPage from "@/components/home/LibraryPage";
-import ShelfPage from "@/components/home/ShelfPage";
-import RankPage from "@/components/home/RankPage";
-import SearchPage from "@/components/home/SearchPage";
-import MessagePage from "@/components/personal/MessagePage";
-import MomentPage from "@/components/personal/MomentPage";
-import HistoryPage from "@/components/personal/HistoryPage";
-import StudyPage from "@/components/personal/StudyPage.vue";
-import CenterPage from "@/components/personal/CenterPage";
-import PublishPage from "@/components/personal/PublishPage.vue";
 
 
 const routes = [
@@ -38,6 +27,93 @@ const routes = [
         meta: {
             title: '管理员-注册'
         }
+    },
+    {
+        path: '/home',
+        component: () => import('@/views/home'),
+        children: [
+            {
+                path: 'children-management',
+                name: 'children-management',
+                component: () => import('@/views/home/children-management'),
+                meta: {
+                    keepAlive: true,
+                    title: '管理员-儿童账户管理'
+                }
+            },
+            {
+                path: 'volunteer-management',
+                name: 'volunteer-management',
+                component: () => import('@/views/home/volunteer-management'),
+                meta: {
+                    keepAlive: true,
+                    title: '管理员-志愿者账户管理'
+                }
+            },
+            {
+                path: 'learning-management',
+                name: 'learning-management',
+                component: () => import('@/views/home/learning-management'),
+                meta: {
+                    keepAlive: true,
+                    title: '管理员-学习任务管理'
+                }
+            },
+            {
+                path: 'interactive-management',
+                name: 'interactive-management',
+                component: () => import('@/views/home/interactive-management'),
+                meta: {
+                    keepAlive: true,
+                    title: '管理员-交互任务管理'
+                }
+            },
+            {
+                path: 'volunteer-review',
+                name: 'volunteer-review',
+                component: () => import('@/views/home/volunteer-review'),
+                meta: {
+                    keepAlive: true,
+                    title: '管理员-志愿者资质审核'
+                }
+            },
+            {
+                path: 'children-review',
+                name: 'children-review',
+                component: () => import('@/views/home/children-review'),
+                meta: {
+                    keepAlive: true,
+                    title: '管理员-儿童资质审核'
+                }
+            },
+            {
+                path: 'organization-review',
+                name: 'organization-review',
+                component: () => import('@/views/home/organization-review'),
+                meta: {
+                    keepAlive: true,
+                    title: '管理员-志愿者组织资质审核'
+                }
+            },
+            {
+                path: 'fund-management',
+                name: 'fund-management',
+                component: () => import('@/views/home/fund-management'),
+                meta: {
+                    keepAlive: true,
+                    title: '管理员-资金管理'
+                }
+            },
+            {
+                path: 'material-management',
+                name: 'material-management',
+                component: () => import('@/views/home/material-management'),
+                meta: {
+                    keepAlive: true,
+                    title: '管理员-物资管理'
+                }
+            },
+        ]
     },
 ];
 
