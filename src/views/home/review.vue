@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "volunteer-review"
+  name: "review"
 }
 </script>
 

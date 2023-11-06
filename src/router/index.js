@@ -69,21 +69,12 @@ const routes = [
                 }
             },
             {
-                path: 'volunteer-review',
-                name: 'volunteer-review',
-                component: () => import('@/views/home/volunteer-review'),
+                path: 'review',
+                name: 'review',
+                component: () => import('@/views/home/review'),
                 meta: {
                     keepAlive: true,
-                    title: '管理员-志愿者资质审核'
-                }
-            },
-            {
-                path: 'organization-review',
-                name: 'organization-review',
-                component: () => import('@/views/home/organization-review'),
-                meta: {
-                    keepAlive: true,
-                    title: '管理员-志愿者组织资质审核'
+                    title: '管理员-资质审核'
                 }
             },
             {

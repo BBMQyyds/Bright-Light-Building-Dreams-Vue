@@ -6,6 +6,8 @@
 
 <script>
 
+import { ref, onMounted } from 'vue';
+
 export default {
   name: 'App',
   data() {
@@ -14,6 +16,7 @@ export default {
     }
   },
 }
+
 </script>
 
 <style>

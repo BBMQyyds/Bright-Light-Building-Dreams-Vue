@@ -22,20 +22,14 @@
       </router-link>
 
       <router-link to="/home/interactive-management">
-        <el-menu-item index="/home/interactive-management">
+        <el-menu-item index="/home/interactive-management" style="margin-right:200px">
           <i class="el-icon-document"></i>交互任务管理
         </el-menu-item>
       </router-link>
 
-      <router-link to="/home/volunteer-review">
-        <el-menu-item index="/home/volunteer-review">
-          <i class="el-icon-box"></i>志愿者资质审核
-        </el-menu-item>
-      </router-link>
-
-      <router-link to="/home/organization-review">
-        <el-menu-item index="/home/organization-review">
-          <i class="el-icon-s-management"></i>志愿者组织资质审核
+      <router-link to="/home/review">
+        <el-menu-item index="/home/review">
+          <i class="el-icon-box"></i>资质审核
         </el-menu-item>
       </router-link>
 
@@ -125,6 +119,7 @@ export default {
 .el-menu-item {
   color: white;
   background: transparent !important;
+  margin-right: 20px;
 }
 
 .icon {

@@ -1,17 +1,16 @@
 <template>
   <el-dialog v-model="editVisible" class="width" :close-on-click-modal="false"
              destroy-on-close :show-close=false>
+    <template #header="{title}">
+      <div style="font-size: 24px; font-weight: bolder;text-align: center; color: black;margin-top: 5px">
+        {{ this.type === 'add' ? '添加儿童账户' : '编辑儿童账户' }}
+      </div>
+    </template>
     <el-card class="box-card edit-card">
-      <template #header="{title}">
-        <div style="font-size: 24px; font-weight: bolder; margin-bottom: 10px;text-align: left">
-          {{ this.type === 'add' ? '添加儿童账户' : '编辑儿童账户' }}
-        </div>
-      </template>
-      <el-form
-          ref="editForm"
-          :model="editedData"
-          :rules="editRules"
-          label-width="100px">
+      <el-form ref="editForm"
+               :model="editedData"
+               :rules="editRules"
+               label-width="100px">
         <el-form-item v-if="type === 'edit'" label="ID" prop="id">
           <el-input v-model="editedData.id" :readonly="true"></el-input>
         </el-form-item>
@@ -99,7 +98,7 @@ export default {
     cancelEdit() {
       this.$msg({
         type: 'info',
-        message: '取消' + this.type === 'add' ? '添加' : '编辑',
+        message: '取消' + (this.type === 'add' ? '添加' : '编辑'),
       });
       this.editVisible = false;
     },
@@ -117,6 +116,7 @@ export default {
 <style scoped>
 
 .edit-card {
+  margin-top: 0;
   background: transparent;
   width: 450px;
   height: auto;
