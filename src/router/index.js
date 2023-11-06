@@ -113,6 +113,15 @@ const routes = [
                     title: '管理员-物资管理'
                 }
             },
+            {
+                path: 'admin-info',
+                name: 'admin-info',
+                component: () => import('@/views/home/admin-info'),
+                meta: {
+                    keepAlive: true,
+                    title: '管理员-个人信息'
+                }
+            }
         ]
     },
 ];

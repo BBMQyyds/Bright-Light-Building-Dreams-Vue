@@ -6,32 +6,32 @@
       <el-card class="box-card register-card">
         <img id="logo" alt="logo" src="../../assets/img/logo.png">
         <el-form
-          ref="user"
-          :model="user"
-          :rules="rules"
-          label-width="auto">
+            ref="user"
+            :model="user"
+            :rules="rules"
+            label-width="auto">
           <el-form-item class="input" prop="username">
             <el-input
-              v-model="user.username"
-              placeholder="请输入用户名">
+                v-model="user.username"
+                placeholder="请输入用户名">
             </el-input>
           </el-form-item>
 
           <el-form-item class="input" prop="password">
             <el-input
-              v-model="user.password"
-              placeholder="设置密码（6-32位字母、数字或特殊符号）"
-              show-password
-              type="password">
+                v-model="user.password"
+                placeholder="设置密码（6-32位字母、数字或特殊符号）"
+                show-password
+                type="password">
             </el-input>
           </el-form-item>
 
           <el-form-item class="input" prop="confirm">
             <el-input
-              v-model="user.confirm"
-              placeholder="确认密码"
-              show-password
-              type="password">
+                v-model="user.confirm"
+                placeholder="确认密码"
+                show-password
+                type="password">
             </el-input>
           </el-form-item>
           <el-form-item class="item">

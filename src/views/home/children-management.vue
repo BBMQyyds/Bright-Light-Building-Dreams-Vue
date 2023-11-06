@@ -1,14 +1,17 @@
 <template>
   <div class="main">
     <el-row class="row">
-      <el-col :span="12">
-        <el-input class="search" v-model="searchKeyword" placeholder="搜索儿童账户"></el-input>
+      <el-col :span="4">
+        <el-input v-model="searchKeyword" class="search" placeholder="搜索儿童账户"></el-input>
+      </el-col>
+      <el-col :span="2" class="text-right">
+        <el-button type="primary" @click="addChild">添加儿童</el-button>
       </el-col>
     </el-row>
     <el-table
         ref="table"
-        :data="pagedChildList"
         :cell-style="{'text-align':'center'}"
+        :data="pagedChildList"
         :header-cell-style="{backgroundColor:'#D9AFD9','text-align':'center'
         , 'font-size': '15px','color': 'black', 'font-weight': 'normal','padding-left': '15px'}"
         class="table"
@@ -25,8 +28,9 @@
       <el-table-column label="操作" width="225">
         <template v-slot="scope">
           <div style="display: flex; justify-content: center;margin-left: 15px">
-            <el-button type="warning" size="default" @click="editChild(scope.row)">编辑</el-button>
-            <el-button type="danger" size="default" @click="deleteChild(scope.row)">删除</el-button>
+            <el-button size="default" type="warning" @click="editChild(scope.row)">编辑</el-button>
+            <ChildCard ref="childCard"></ChildCard>
+            <el-button size="default" type="danger" @click="deleteChild(scope.row)">删除</el-button>
           </div>
         </template>
       </el-table-column>
@@ -34,29 +38,28 @@
     <p></p>
     <el-pagination
         :current-page="currentPage"
-        :page-sizes="[10, 20, 30, 40]"
         :page-size="pageSize"
-        layout="total, prev, pager, next"
+        :page-sizes="[10, 20, 30, 40]"
         :total="inputChildList.length"
+        layout="total, prev, pager, next"
         @current-change="handleCurrentPageChange">
     </el-pagination>
-      <div id="button">
-          <el-button
-          type="primary"
-          @click="LoginOut"
-          >退出登录</el-button>
-      </div>
   </div>
 </template>
 
 
 <script>
-import router from "@/router";
+import ChildCard from "@/components/bar/card/ChildCard.vue";
 
 export default {
+  name: "ChildrenManagement",
+  components: {
+    ChildCard,
+  },
   data() {
     return {
       searchKeyword: '',
+      childVisible: false,
       childList: [
         {
           id: 1,
@@ -174,15 +177,12 @@ export default {
     handleCurrentPageChange(page) {
       this.currentPage = page;
     },
-    editChild(child) {
-
+    addChild() {
+      this.$refs.childCard.addChild();
     },
-      LoginOut(){
-          router.push({
-              path: '/login',
-          });
-          sessionStorage.removeItem("token");
-      },
+    editChild(child) {
+      this.$refs.childCard.editChild(child);
+    },
     deleteChild(child) {
       // 弹出确认框
       this.$confirm('此操作将永久删除该儿童账户, 是否继续?', '提示', {
@@ -225,6 +225,7 @@ export default {
 
 .row {
   margin-top: 20px;
+  align-items: center;
 }
 
 ::v-deep .el-table__row {
@@ -255,7 +256,8 @@ export default {
     padding-top: 8px;
   }
 }
-    #button{
-      margin-left: 90%;
-    }
+
+#button {
+  margin-left: 90%;
+}
 </style>

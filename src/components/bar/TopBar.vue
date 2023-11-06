@@ -57,8 +57,11 @@
         </el-menu-item>
       </router-link>
     </el-menu>
-    <span class="user">
-      你好，<a class="username">{{this.$store.state.user.name}}</a>！
+    <span class="user"
+          @mouseout="this.$refs.infoCard.isCardVisible=false"
+          @mouseover="this.$refs.infoCard.isCardVisible=true">
+      你好，<a class="username">{{ this.$store.state.user?this.$store.state.user.name:'' }}</a>！
+      <InfoCard ref="infoCard" class="info-card"></InfoCard>
     </span>
   </div>
 </template>
@@ -66,9 +69,11 @@
 <script>
 
 import router from "@/router";
+import InfoCard from "@/components/bar/card/InfoCard.vue";
 
 export default {
   name: "TopBar",
+  components: {InfoCard},
   methods: {
     toHome() {
       router.push('/home/main');
@@ -170,7 +175,7 @@ a {
   text-decoration: none;
 }
 
-.user{
+.user {
   flex: 1;
   text-align: right;
   margin-right: 2%;
@@ -185,6 +190,12 @@ a {
 .username:hover {
   color: #207EFF !important;
   cursor: pointer;
+}
+
+.info-card{
+    position: absolute;
+    top: 70%; /* 将卡片放在头像的正下方，可以调整这个值来调整卡片与头像的间距 */
+    right: 2%;
 }
 
 </style>
