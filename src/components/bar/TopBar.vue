@@ -33,12 +33,6 @@
         </el-menu-item>
       </router-link>
 
-      <router-link to="/home/children-review">
-        <el-menu-item index="/home/children-review">
-          <i class="el-icon-box"></i>儿童资质审核
-        </el-menu-item>
-      </router-link>
-
       <router-link to="/home/organization-review">
         <el-menu-item index="/home/organization-review">
           <i class="el-icon-s-management"></i>志愿者组织资质审核
@@ -58,26 +52,38 @@
       </router-link>
     </el-menu>
     <span class="user"
-          @mouseout="this.$refs.infoCard.isCardVisible=false"
-          @mouseover="this.$refs.infoCard.isCardVisible=true">
-      你好，<a class="username">{{ this.$store.state.user?this.$store.state.user.name:'' }}</a>！
-      <InfoCard ref="infoCard" class="info-card"></InfoCard>
+          @mouseout="outOfCard"
+          @mouseover="this.$refs.infoCard.isCardVisible=true;">
+      你好，<a class="username">{{ this.$store.state.user ? this.$store.state.user.name : '' }}</a>
+      <InfoCard ref="infoCard" class="info-card"
+                @mouseout="this.onInfo=false"
+                @mouseover="this.onInfo=true;">
+
+      </InfoCard>
     </span>
   </div>
 </template>
 
 <script>
 
-import router from "@/router";
 import InfoCard from "@/components/bar/card/InfoCard.vue";
 
 export default {
   name: "TopBar",
   components: {InfoCard},
+  data() {
+    return {
+      onInfo: false,
+    };
+  },
   methods: {
-    toHome() {
-      router.push('/home/main');
-    },
+    outOfCard() {
+      setTimeout(() => {
+        if (!this.onInfo) {
+          this.$refs.infoCard.isCardVisible = false;
+        }
+      }, 500);
+    }
   }
 };
 
@@ -92,7 +98,7 @@ export default {
 .top-bar {
   display: flex;
   align-items: center;
-  background: url("../../assets/img/top.jpg") no-repeat;
+  background: black;
   background-size: cover;
   width: 100%;
   position: fixed;
@@ -117,12 +123,12 @@ export default {
 }
 
 .el-menu-item {
-  color: black;
+  color: white;
   background: transparent !important;
 }
 
 .icon {
-  color: black !important;
+  color: white !important;
 }
 
 .el-menu-item:hover {
@@ -155,7 +161,7 @@ export default {
 }
 
 .user-button {
-  color: black !important;
+  color: white !important;
   font-size: 15px;
   font-weight: bold;
   margin-right: 10px;
@@ -177,8 +183,9 @@ a {
 
 .user {
   flex: 1;
+  color: white;
   text-align: right;
-  margin-right: 2%;
+  margin-right: 5%;
   font-size: 16px;
   font-weight: bold;
 }
@@ -192,10 +199,10 @@ a {
   cursor: pointer;
 }
 
-.info-card{
-    position: absolute;
-    top: 70%; /* 将卡片放在头像的正下方，可以调整这个值来调整卡片与头像的间距 */
-    right: 2%;
+.info-card {
+  position: absolute;
+  top: 120%; /* 将卡片放在头像的正下方，可以调整这个值来调整卡片与头像的间距 */
+  right: 3%;
 }
 
 </style>

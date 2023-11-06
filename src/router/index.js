@@ -78,15 +78,6 @@ const routes = [
                 }
             },
             {
-                path: 'children-review',
-                name: 'children-review',
-                component: () => import('@/views/home/children-review'),
-                meta: {
-                    keepAlive: true,
-                    title: '管理员-儿童资质审核'
-                }
-            },
-            {
                 path: 'organization-review',
                 name: 'organization-review',
                 component: () => import('@/views/home/organization-review'),

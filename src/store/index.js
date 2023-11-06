@@ -21,6 +21,8 @@ export default createStore({
             state.auto = false;
             localStorage.setItem('auto', 'false');
             localStorage.removeItem('user');
+            localStorage.removeItem('username');
+            localStorage.removeItem('password');
         },
         setSearchKeyWord(state, searchKeyWord) {
             state.searchKeyWord = searchKeyWord;

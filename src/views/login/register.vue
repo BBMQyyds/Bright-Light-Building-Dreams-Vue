@@ -89,7 +89,7 @@ export default {
         //表单验证成功
         if (valid) {
           if (this.user.password !== this.user.confirm) {
-            this.$message({
+            this.$msg({
               message: '两次输入的密码不一致，请重新输入',
               type: 'error'
             });
@@ -102,17 +102,16 @@ export default {
             lastUpdatedBy: this.user.username,
           })).then(res => {
             if (res.data === 1) {
-              this.$message({
+              this.$msg({
                 message: '创建成功！',
                 type: 'success',
-                offset: 50,
                 duration: 500
               });
               router.push({
                 path: '/login',
               })
             } else {
-              this.$message({
+              this.$msg({
                 message: '该用户名已存在，请重新输入',
                 type: 'error'
               });
@@ -121,7 +120,7 @@ export default {
             console.log(err)
           })
         } else {
-          this.$message({
+          this.$msg({
             message: '输入格式不正确，请重新输入',
             type: 'error'
           });

@@ -42,7 +42,6 @@
 
 
 <script>
-import router from "@/router";
 
 export default {
   data() {
@@ -100,12 +99,6 @@ export default {
     editChild(child) {
 
     },
-    LoginOut() {
-      router.push({
-        path: '/login',
-      });
-      sessionStorage.removeItem("token");
-    },
     deleteChild(child) {
       // 弹出确认框
       this.$confirm('此操作将永久删除该儿童账户, 是否继续?', '提示', {
@@ -114,17 +107,15 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
+        this.$msg({
           message: '删除成功',
           type: 'success',
-          offset: 75,
           duration: 500
         });
       }).catch(() => {
-        this.$message({
+        this.$msg({
           message: '已取消删除',
           type: 'info',
-          offset: 75,
           duration: 500
         });
       });

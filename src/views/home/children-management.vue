@@ -13,7 +13,7 @@
         :cell-style="{'text-align':'center'}"
         :data="pagedChildList"
         :header-cell-style="{backgroundColor:'#D9AFD9','text-align':'center'
-        , 'font-size': '15px','color': 'black', 'font-weight': 'normal','padding-left': '15px'}"
+        , 'font-size': '15px','color': 'black', 'font-weight': 'normal','padding-left': '17px'}"
         class="table"
         style="margin-top: 20px;">
       <el-table-column label="ID" prop="id" sortable></el-table-column>
@@ -22,13 +22,14 @@
       <el-table-column label="姓名" prop="name" sortable></el-table-column>
       <el-table-column label="年级" prop="grade" sortable></el-table-column>
       <el-table-column label="地点" prop="locate" sortable></el-table-column>
-      <el-table-column label="责任" prop="duty" sortable></el-table-column>
+      <el-table-column label="持有任务数" prop="duty" sortable></el-table-column>
       <el-table-column label="已完成任务" prop="completed_tasks" sortable></el-table-column>
       <el-table-column label="志愿者ID" prop="volunteer_id" sortable></el-table-column>
       <el-table-column label="操作" width="225">
         <template v-slot="scope">
           <div style="display: flex; justify-content: center;margin-left: 15px">
-            <el-button size="default" type="warning" @click="editChild(scope.row)">编辑</el-button>
+            <el-button size="default" type="warning" @click="editChild(scope.row)"
+            style="margin-right: 10px">编辑</el-button>
             <ChildCard ref="childCard"></ChildCard>
             <el-button size="default" type="danger" @click="deleteChild(scope.row)">删除</el-button>
           </div>
@@ -191,17 +192,15 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
+        this.$msg({
           message: '删除成功',
           type: 'success',
-          offset: 75,
           duration: 500
         });
       }).catch(() => {
-        this.$message({
+        this.$msg({
           message: '已取消删除',
           type: 'info',
-          offset: 75,
           duration: 500
         });
       });

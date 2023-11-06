@@ -42,21 +42,12 @@
         :page-sizes="[10, 20, 30, 40]"
         :total="inputTaskList.length"
         layout="total, prev, pager, next"
-        @current-change="handleCurrentPageChange"
-    >
+        @current-change="handleCurrentPageChange">
     </el-pagination>
-    <div id="button">
-      <el-button
-          type="primary"
-          @click="LoginOut"
-      >退出登录
-      </el-button>
-    </div>
   </div>
 </template>
 
 <script>
-import router from "@/router";
 
 export default {
   data() {
@@ -67,8 +58,8 @@ export default {
           id: '1',
           score: 100,
           content: '完成数学作业',
-          startTime: new Date(),
-          finishTime: new Date(),
+          startTime: this.$utils.formatDateToYYMMDDHHMMSS(new Date()),
+          finishTime: this.$utils.formatDateToYYMMDDHHMMSS(new Date()),
           video: 'math.mp4',
           subject: '数学',
           grade: '一年级',
@@ -169,12 +160,6 @@ export default {
     editTask(task) {
       // 编辑任务
     },
-    LoginOut() {
-      router.push({
-        path: '/login',
-      });
-      sessionStorage.removeItem("token");
-    },
     deleteTask(task) {
       // 弹出确认框
       this.$confirm('此操作将永久删除该任务, 是否继续?', '提示', {
@@ -183,17 +168,15 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
+        this.$msg({
           message: '删除成功',
           type: 'success',
-          offset: 75,
           duration: 500
         });
       }).catch(() => {
-        this.$message({
+        this.$msg({
           message: '已取消删除',
           type: 'info',
-          offset: 75,
           duration: 500
         });
       });

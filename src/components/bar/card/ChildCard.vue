@@ -1,12 +1,18 @@
 <template>
-  <el-dialog v-model="editVisible" class="width" title="编辑数据">
+  <el-dialog v-model="editVisible" class="width" :close-on-click-modal="false"
+             destroy-on-close :show-close=false>
     <el-card class="box-card edit-card">
+      <template #header="{title}">
+        <div style="font-size: 24px; font-weight: bolder; margin-bottom: 10px;text-align: left">
+          {{ this.type === 'add' ? '添加儿童账户' : '编辑儿童账户' }}
+        </div>
+      </template>
       <el-form
           ref="editForm"
           :model="editedData"
           :rules="editRules"
           label-width="100px">
-        <el-form-item label="ID" prop="id" v-if="type === 'edit'">
+        <el-form-item v-if="type === 'edit'" label="ID" prop="id">
           <el-input v-model="editedData.id" :readonly="true"></el-input>
         </el-form-item>
         <el-form-item label="用户名" prop="username">
@@ -24,7 +30,7 @@
         <el-form-item label="地点" prop="locate">
           <el-input v-model="editedData.locate"></el-input>
         </el-form-item>
-        <el-form-item label="责任" prop="duty">
+        <el-form-item label="持有任务数" prop="duty">
           <el-input v-model="editedData.duty"></el-input>
         </el-form-item>
         <el-form-item label="已完成任务" prop="completed_tasks">
@@ -91,16 +97,16 @@ export default {
       this.editVisible = true;
     },
     cancelEdit() {
-      this.$message({
+      this.$msg({
         type: 'info',
-        message: '取消' + this.type === 'add' ? '添加' : '编辑'
+        message: '取消' + this.type === 'add' ? '添加' : '编辑',
       });
       this.editVisible = false;
     },
     saveEdit() {
-      this.$message({
+      this.$msg({
         type: 'success',
-        message: '保存成功'
+        message: '保存成功',
       });
       this.editVisible = false;
     },
@@ -130,7 +136,7 @@ export default {
 }
 
 :deep(input) {
-  width: 350px;
+  width: 250px;
   height: 40px;
   border: none;
 }
@@ -138,6 +144,7 @@ export default {
 
 <style>
 .width {
+  z-index: 20000;
   margin-top: 100px;
   width: 500px !important;
   border-radius: 15px !important;

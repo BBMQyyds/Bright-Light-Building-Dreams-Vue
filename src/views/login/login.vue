@@ -50,18 +50,18 @@ import router from "@/router";
 export default {
   name: "login",
   created() {
-    // if (localStorage.getItem("username") !== null && localStorage.getItem("password") !== null) {
-    //   this.user.username = localStorage.getItem("username");
-    //   this.user.password = localStorage.getItem("password");
-    //   if (localStorage.getItem("auto") !== null) {
-    //     this.auto = true;
-    //   }
-    // }
+    if (localStorage.getItem("username") !== null && localStorage.getItem("password") !== null) {
+      this.user.username = localStorage.getItem("username");
+      this.user.password = localStorage.getItem("password");
+      if (localStorage.getItem("auto") !== null && localStorage.getItem("auto") === "true") {
+        this.auto = true;
+      }
+    }
   },
   mounted() {
-    // if (localStorage.getItem("auto") !== null) {
-    //   this.login();
-    // }
+    if (localStorage.getItem("auto") !== null && localStorage.getItem("auto") === "true") {
+      this.login();
+    }
   },
   data() {
     return {
@@ -98,10 +98,9 @@ export default {
             password: this.user.password,
           })).then(res => {
             if (res.data !== null && 'username' in res.data.result && res.data.result.username !== null) {
-              this.$message({
+              this.$msg({
                 message: '登录成功！',
                 type: 'success',
-                offset: 50,
                 duration: 500
               });
               this.$store.commit('setUser', res.data.result);
@@ -125,7 +124,7 @@ export default {
                 }
               })
             } else {
-              this.$message({
+              this.$msg({
                 message: '用户名或密码不正确，请重新输入',
                 type: 'error'
               });
@@ -137,7 +136,7 @@ export default {
             console.log(err)
           })
         } else {
-          this.$message({
+          this.$msg({
             message: '输入格式不正确，请重新输入',
             type: 'error'
           });
