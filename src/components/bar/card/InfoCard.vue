@@ -83,7 +83,7 @@ export default {
 
 hr {
   border: 0;
-  background-color: #D8D8D8;
+  background-color: #EEEEEE;
   height: 1px;
   margin-top: 5px;
   margin-bottom: 5px;

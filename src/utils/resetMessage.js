@@ -5,7 +5,8 @@ const resetMessage = (options) => {
     if (messageDom) messageDom.close() // 判断弹窗是否已存在,若存在则关闭
     messageDom = ElMessage({
         ...options,
-        offset: 75
+        offset: 75,
+        duration:500,
     })
     return messageDom
 }
@@ -15,7 +16,8 @@ typeArr.forEach(type => {
         if (typeof options === 'string') {
             options = {
                 message: options,
-                offset: 75
+                offset: 75,
+                duration:500,
             }
         }
         options.type = type

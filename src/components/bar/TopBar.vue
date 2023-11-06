@@ -98,7 +98,7 @@ export default {
 .top-bar {
   display: flex;
   align-items: center;
-  background: black;
+  background: #222831;
   background-size: cover;
   width: 100%;
   position: fixed;
@@ -109,7 +109,7 @@ export default {
 .logo {
   margin-left: 1%;
   margin-right: 1%;
-  width: 80px;
+  width: 75px;
 }
 
 .menu {

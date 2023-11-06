@@ -39,7 +39,7 @@ export default {
 }
 
 .home-bg {
-  background: url("../assets/img/main.jpg");
+  background: #EEEEEE;
   background-size: cover;
   height: 100%;
   width: 100%;

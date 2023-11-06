@@ -13,14 +13,14 @@
           <el-form-item class="input" prop="username">
             <el-input
                 v-model="user.username"
-                placeholder="用户名">
+                placeholder="请输入账号">
             </el-input>
           </el-form-item>
 
           <el-form-item class="input" prop="password">
             <el-input
                 v-model="user.password"
-                placeholder="请输入登录密码"
+                placeholder="请输入密码"
                 show-password
                 type="password">
             </el-input>

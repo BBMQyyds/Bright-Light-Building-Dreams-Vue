@@ -9,7 +9,8 @@
         ref="table"
         :cell-style="{'text-align': 'center'}"
         :data="pagedTaskList"
-        :header-cell-style="{backgroundColor: '#D9AFD9', 'text-align': 'center', 'font-size': '15px', 'color': 'black', 'font-weight': 'normal', 'padding-left': '15px'}"
+        :header-cell-style="{backgroundColor:'#393E46','text-align':'center'
+        , 'font-size': '15px','color': 'white', 'font-weight': 'normal','padding-left': '17px'}"
         class="table"
         style="margin-top: 20px;"
     >
@@ -216,11 +217,11 @@ export default {
 }
 
 ::v-deep .el-table__row {
-  background-color: #97D9E1;
+  background-color: lightgray;
 }
 
 .table ::v-deep .el-table__body tr:hover > td {
-  background-color: #D9AFD9 !important;
+  background-color: #E6E6E6;
 }
 
 .el-button {
@@ -228,7 +229,7 @@ export default {
 }
 
 .table {
-  border-radius: 15px;
+  border-radius: 5px;
 }
 
 </style>

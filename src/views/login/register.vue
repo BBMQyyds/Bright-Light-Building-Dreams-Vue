@@ -13,7 +13,7 @@
           <el-form-item class="input" prop="username">
             <el-input
                 v-model="user.username"
-                placeholder="请输入用户名">
+                placeholder="请输入账号">
             </el-input>
           </el-form-item>
 
