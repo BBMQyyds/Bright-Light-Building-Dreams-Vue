@@ -6,9 +6,6 @@
     </div>
     <hr>
     <el-menu class="menu">
-      <el-menu-item @click="toInfoPage">
-        <img alt="用户" src="../../../assets/img/icon/user.png" style="width: 20px;margin-left: -5px">
-        <span class="span1">个人信息</span></el-menu-item>
       <el-menu-item @click="logout">
         <img alt="登出" class="logout" src="../../../assets/img/icon/logout.png" style="width: 20px;margin-left: -5px">
         <span class="span2">退出登录</span>

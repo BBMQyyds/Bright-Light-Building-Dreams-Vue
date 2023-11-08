@@ -6,7 +6,7 @@ const resetMessage = (options) => {
     messageDom = ElMessage({
         ...options,
         offset: 75,
-        duration:500,
+        duration: 500,
     })
     return messageDom
 }
@@ -17,7 +17,7 @@ typeArr.forEach(type => {
             options = {
                 message: options,
                 offset: 75,
-                duration:500,
+                duration: 500,
             }
         }
         options.type = type

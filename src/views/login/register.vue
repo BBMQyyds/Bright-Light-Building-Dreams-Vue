@@ -13,7 +13,28 @@
           <el-form-item class="input" prop="username">
             <el-input
                 v-model="user.username"
-                placeholder="请输入账号">
+                placeholder="请输入用户名">
+            </el-input>
+          </el-form-item>
+
+          <el-form-item class="input" prop="name">
+            <el-input
+                v-model="user.name"
+                placeholder="请输入姓名">
+            </el-input>
+          </el-form-item>
+
+          <el-form-item class="input" prop="phone">
+            <el-input
+                v-model="user.phone"
+                placeholder="请输入手机号">
+            </el-input>
+          </el-form-item>
+
+          <el-form-item class="input" prop="idNumber">
+            <el-input
+                v-model="user.idNumber"
+                placeholder="请输入身份证号">
             </el-input>
           </el-form-item>
 
@@ -53,7 +74,6 @@
 
 import request from "@/api";
 import router from "@/router";
-import CryptoJS from 'crypto-js'
 
 export default {
   name: "register",
@@ -62,6 +82,10 @@ export default {
       name: '',
       user: {
         username: "",
+        name: "",
+        sex: 0,
+        phone: "",
+        idNumber: "",
         password: "",
         confirm: "",
       },
@@ -70,6 +94,21 @@ export default {
         username: [
           {required: true, message: '用户名不能为空', trigger: 'blur'},
           {min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur'}
+        ],
+        name: [
+          {required: true, message: '姓名不能为空', trigger: 'blur'},
+          {min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur'}
+        ],
+        sex: [
+          {required: true, message: '性别不能为空', trigger: 'blur'},
+        ],
+        phone: [
+          {required: true, message: '手机号不能为空', trigger: 'blur'},
+          {min: 11, max: 11, message: '长度为 11 个字符', trigger: 'blur'}
+        ],
+        idNumber: [
+          {required: true, message: '身份证号不能为空', trigger: 'blur'},
+          {min: 18, max: 18, message: '长度为 18 个字符', trigger: 'blur'}
         ],
         password: [
           {required: true, message: '密码不能为空', trigger: 'blur'},
@@ -95,13 +134,14 @@ export default {
             });
             return;
           }
-          request.post('/insertUser', JSON.stringify({
+          request.post('/administrator/user/register', JSON.stringify({
             username: this.user.username,
-            password: CryptoJS.MD5(this.user.password).toString(),
-            createdBy: this.user.username,
-            lastUpdatedBy: this.user.username,
+            name: this.user.name,
+            phone: this.user.phone,
+            idNumber: this.user.idNumber,
+            password: this.user.password,
           })).then(res => {
-            if (res.data === 1) {
+            if (res.data.code === 1) {
               this.$msg({
                 message: '创建成功！',
                 type: 'success',
@@ -155,11 +195,11 @@ export default {
 
 .register-card {
   position: absolute;
-  top: 40%;
+  top: 45%;
   left: 50%;
   transform: translateY(-50%) translateX(-50%);
   width: 450px;
-  height: 400px;
+  height: 600px;
   border-radius: 15px;
   text-align: center;
   z-index: 20;
@@ -182,7 +222,7 @@ export default {
 }
 
 .item {
-  margin-bottom: 30px;
+  margin-bottom: 15px;
   text-align: center;
 }
 

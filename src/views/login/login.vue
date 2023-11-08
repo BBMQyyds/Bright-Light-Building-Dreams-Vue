@@ -13,7 +13,7 @@
           <el-form-item class="input" prop="username">
             <el-input
                 v-model="user.username"
-                placeholder="请输入账号">
+                placeholder="请输入用户名">
             </el-input>
           </el-form-item>
 
@@ -89,15 +89,11 @@ export default {
       this.$refs.user.validate(valid => {
         //表单验证成功
         if (valid) {
-          console.log(JSON.stringify({
-            username: this.user.username,
-            password: this.user.password,
-          }));
           request.post('/administrator/user/login', JSON.stringify({
             username: this.user.username,
             password: this.user.password,
           })).then(res => {
-            if (res.data !== null && 'username' in res.data.result && res.data.result.username !== null) {
+            if (res.data.code === 0 && 'username' in res.data.result && res.data.result.username !== null) {
               this.$msg({
                 message: '登录成功！',
                 type: 'success',

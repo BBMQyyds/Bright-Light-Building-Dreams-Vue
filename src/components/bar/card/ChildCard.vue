@@ -1,6 +1,6 @@
 <template>
-  <el-dialog v-model="editVisible" class="width" :close-on-click-modal="false"
-             destroy-on-close :show-close=false>
+  <el-dialog v-model="editVisible" :close-on-click-modal="false" :show-close=false
+             class="width" destroy-on-close>
     <template #header="{title}">
       <div style="font-size: 24px; font-weight: bolder;text-align: center; color: black;margin-top: 5px">
         {{ this.type === 'add' ? '添加儿童账户' : '编辑儿童账户' }}
@@ -32,10 +32,10 @@
         <el-form-item label="持有任务数" prop="duty">
           <el-input v-model="editedData.duty"></el-input>
         </el-form-item>
-        <el-form-item label="已完成任务" prop="completed_tasks">
+        <el-form-item label="完成任务数" prop="completedTasks">
           <el-input v-model="editedData.completed_tasks"></el-input>
         </el-form-item>
-        <el-form-item label="志愿者ID" prop="volunteer_id">
+        <el-form-item label="志愿者ID" prop="volunteerId">
           <el-input v-model="editedData.volunteer_id"></el-input>
         </el-form-item>
       </el-form>
@@ -128,7 +128,7 @@ export default {
 
 .dialog-footer {
   padding: 20px 0;
-  text-align: center;
+  text-align: center !important;
 }
 
 .el-button {
@@ -145,8 +145,9 @@ export default {
 <style>
 .width {
   z-index: 20000;
-  margin-top: 100px;
+  margin-top: 100px !important;
   width: 500px !important;
   border-radius: 15px !important;
+  text-align: center;
 }
 </style>

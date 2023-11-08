@@ -6,15 +6,26 @@
 
 <script>
 
-import { ref, onMounted } from 'vue';
-
 export default {
   name: 'App',
+  // provide() {
+  //   return {
+  //     reload: this.reload
+  //   }
+  // },
   data() {
     return {
       isRouterAlive: true,
     }
   },
+  // methods: {
+  //   reload() {
+  //     this.$route.meta.keepAlive = false;
+  //     this.$nextTick(() => {
+  //       this.$route.meta.keepAlive = true;
+  //     });
+  //   }
+  // }
 }
 
 </script>

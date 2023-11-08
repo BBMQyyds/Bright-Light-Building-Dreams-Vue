@@ -74,13 +74,13 @@ request.interceptors.response.use(undefined, function axiosRetryInterceptor(err)
 
 // 非资源型请求不必取消（因为token无法登录bug作此处理）
 // 原因：topbar发送token请求时路由路径尚为'/'，导致后续变为相应路径时触发取消操作
-// request.interceptors.request.use(config => {
-//     //发起请求时保存页面所有请求
-//     config.cancelToken = new axios.CancelToken(cancel => {
-//         store.commit('pushToken', cancel);
-//     });
-//     return config
-// });
+request.interceptors.request.use(config => {
+    //发起请求时保存页面所有请求
+    config.cancelToken = new axios.CancelToken(cancel => {
+        store.commit('pushToken', cancel);
+    });
+    return config
+});
 
 const fileRequest = axios.create({
     timeout: 8000,

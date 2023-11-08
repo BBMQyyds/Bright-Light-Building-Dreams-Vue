@@ -10,27 +10,40 @@
         :cell-style="{'text-align': 'center'}"
         :data="pagedTaskList"
         :header-cell-style="{backgroundColor:'#393E46','text-align':'center'
-        , 'font-size': '15px','color': 'white', 'font-weight': 'normal','padding-left': '17px'}"
+        , 'font-size': '15px','color': 'white', 'font-weight': 'normal'}"
         class="table"
         style="margin-top: 20px;"
     >
-      <el-table-column label="ID" prop="id" sortable></el-table-column>
-      <el-table-column label="分数" prop="score" sortable></el-table-column>
-      <el-table-column label="内容" prop="content" sortable></el-table-column>
-      <el-table-column label="开始时间" prop="startTime" sortable></el-table-column>
-      <el-table-column label="结束时间" prop="finishTime" sortable></el-table-column>
-      <el-table-column label="视频" prop="video" sortable></el-table-column>
-      <el-table-column label="科目" prop="subject" sortable></el-table-column>
-      <el-table-column label="年级" prop="grade" sortable></el-table-column>
-      <el-table-column label="状态" prop="status" sortable></el-table-column>
-      <el-table-column label="必须完成" prop="isMustDo" sortable>
+      <el-table-column label="ID" prop="id"></el-table-column>
+      <el-table-column label="分数" prop="score"></el-table-column>
+      <el-table-column label="内容" prop="content"></el-table-column>
+      <el-table-column label="开始时间" prop="startTime"></el-table-column>
+      <el-table-column label="结束时间" prop="finishTime"></el-table-column>
+      <el-table-column label="视频" prop="video"></el-table-column>
+      <el-table-column label="科目" prop="subject"></el-table-column>
+      <el-table-column label="年级" prop="grade"></el-table-column>
+      <el-table-column label="状态" prop="status"></el-table-column>
+      <el-table-column label="必须完成" prop="isMustDo">
       </el-table-column>
       <!-- 根据你的实体类添加其他字段 -->
-      <el-table-column label="操作" width="225">
+      <el-table-column label="操作" width="275">
         <template v-slot="scope">
-          <div style="display: flex; justify-content: center; margin-left: 15px">
+          <div style="display:inline-block; margin-left: 15px;align-items: center">
             <el-button size="default" type="warning" @click="editTask(scope.row)">编辑</el-button>
-            <el-button size="default" type="danger" @click="deleteTask(scope.row)">删除</el-button>
+            <el-button size="default" type="danger" @click="deleteTask(scope.row)"
+                       style="margin-right: 15px">删除
+            </el-button>
+            <hr>
+            <div style="text-align: left;">
+              <el-select v-model="scope.row.child_id" placeholder="分配任务给儿童" size="small">
+                <el-option
+                    v-for="item in childList"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+                </el-option>
+              </el-select>
+            </div>
           </div>
         </template>
       </el-table-column>
@@ -54,6 +67,7 @@ export default {
   data() {
     return {
       searchKeyword: '',
+      childList: [],
       taskList: [
         {
           id: '1',
@@ -235,6 +249,11 @@ export default {
 </style>
 
 <style lang="scss">
+
+.selectChild {
+  width: 1px !important;
+}
+
 .confirm {
   .el-button:nth-child(1) {
     padding-top: 8px;
