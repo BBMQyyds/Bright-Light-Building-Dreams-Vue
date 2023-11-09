@@ -15,7 +15,7 @@ import utils from "@/utils/utils";
 import 'highlight.js/styles/androidstudio.css';
 import 'highlight.js/lib/common';
 import hljsVuePlugin from '@highlightjs/vue-plugin';
-
+import * as echarts from "echarts";
 
 let app = createApp(App);
 
@@ -43,6 +43,7 @@ app.config.globalProperties.$aes = AES;
 app.config.globalProperties.$msg = message;
 app.config.globalProperties.$resource = resource;
 app.config.globalProperties.$utils = utils;
+app.config.globalProperties.$echarts = echarts;
 
 app.use(hljsVuePlugin).use(store).use(router).use(ElementPlus).use(VueCookies).use(VueWechatTitle).mount('#app');
 
