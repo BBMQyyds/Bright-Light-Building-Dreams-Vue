@@ -6,11 +6,11 @@
       <el-table
           ref="table"
           :cell-style="{'text-align':'center'}"
+          :data="volunteerListToReview"
           :header-cell-style="{backgroundColor:'#393E46','text-align':'center', 'font-size': '15px',
           'color': 'white', 'font-weight': 'normal'}"
           class="table"
-          style="margin: 20px;"
-          :data="volunteerListToReview">
+          style="margin: 20px;">
         <!-- 列定义 -->
         <el-table-column label="志愿者用户名" prop="volUsername"></el-table-column>
         <el-table-column label="姓名" prop="volName"></el-table-column>
@@ -32,11 +32,11 @@
       <el-table
           ref="table"
           :cell-style="{'text-align':'center'}"
+          :data="organizationListToReview"
           :header-cell-style="{backgroundColor:'#393E46','text-align':'center', 'font-size': '15px',
           'color': 'white', 'font-weight': 'normal'}"
           class="table"
-          style="margin: 20px;"
-          :data="organizationListToReview">
+          style="margin: 20px;">
         <!-- 列定义 -->
         <el-table-column label="组织名称" prop="org_name"></el-table-column>
         <el-table-column label="是否审核通过">
@@ -152,8 +152,8 @@ export default {
   }
 }
 
-.el-select-dropdown
-.scroll-opacity.el-scrollbar
+.el-select-dropdown,
+.scroll-opacity.el-scrollbar,
 .el-scrollbar__bar.is-vertical {
   opacity: 1; //改为0不显示滚动条
 }

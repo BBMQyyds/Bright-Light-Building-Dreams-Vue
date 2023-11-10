@@ -26,10 +26,13 @@
           <el-input v-model="editedData.volDuty"></el-input>
         </el-form-item>
         <el-form-item label="完成任务数" prop="volCorrectedTasks">
-          <el-input v-model="editedData.completed_tasks"></el-input>
+          <el-input v-model="editedData.completedTasks"></el-input>
         </el-form-item>
         <el-form-item label="电话" prop="volTel">
           <el-input v-model="editedData.volTel"></el-input>
+        </el-form-item>
+        <el-form-item label="身份证号" prop="volSfz">
+          <el-input v-model="editedData.volSfz"></el-input>
         </el-form-item>
       </el-form>
     </el-card>
@@ -58,6 +61,7 @@ export default {
         volDuty: "",
         volCorrectedTasks: "",
         volTel: "",
+        volSfz: "",
       },
       editRules: {
         volUsername: [
@@ -79,18 +83,19 @@ export default {
         ],
         volDuty: [
           {required: true, message: '持有任务数不能为空', trigger: 'blur'},
-          {type: 'number', message: '持有任务数必须为数字值', trigger: 'blur'},
           {min: 0, max: 100, message: '持有任务数必须在 0 到 100 之间', trigger: 'blur'}
         ],
         volCorrectedTasks: [
           {required: true, message: '完成任务数不能为空', trigger: 'blur'},
-          {type: 'number', message: '完成任务数必须为数字值', trigger: 'blur'},
           {min: 0, max: 100, message: '完成任务数必须在 0 到 100 之间', trigger: 'blur'}
         ],
         volTel: [
           {required: true, message: '电话不能为空', trigger: 'blur'},
-          {type: 'number', message: '电话必须为数字值', trigger: 'blur'},
           {min: 10000000000, max: 19999999999, message: '电话必须为 11 位数字', trigger: 'blur'}
+        ],
+        volSfz: [
+          {required: true, message: '身份证号不能为空', trigger: 'blur'},
+          {min: 18, max: 18, message: '身份证号必须为 18 位数字', trigger: 'blur'}
         ],
       },
     };
@@ -99,14 +104,14 @@ export default {
     addVolunteer() {
       this.type = "add";
       this.editedData = {
-        id: "",
+        id: this.$uuid.v1(),
         username: "",
         score: "",
         name: "",
         grade: "",
         locate: "",
         duty: "",
-        completed_tasks: "",
+        completedTasks: "",
         volunteer_id: "",
       };
       this.editVisible = true;
@@ -124,17 +129,9 @@ export default {
       this.editVisible = false;
     },
     saveEdit() {
-      request.post('/administrator/user/volunteer/save', JSON.stringify({
-        volCorrectedTasks: this.editedData.volCorrectedTasks,
-        volDuty: this.editedData.volDuty,
-        volId: this.editedData.volId,
-        volLocate: this.editedData.volLocate,
-        volName: this.editedData.volName,
-        volOrganization: this.editedData.volOrganization,
-        volPassword: this.editedData.volPassword,
-        volTel: this.editedData.volTel,
-        volUsername: this.editedData.volUsername,
-      })).then(res => {
+      request.post('/administrator/user/volunteer/save', JSON.stringify(
+          this.editedData
+      )).then(res => {
         if (res.data.code === 0) {
           this.$message({
             type: 'success',

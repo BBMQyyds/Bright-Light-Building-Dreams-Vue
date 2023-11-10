@@ -33,10 +33,7 @@
           <el-input v-model="editedData.duty"></el-input>
         </el-form-item>
         <el-form-item label="完成任务数" prop="completedTasks">
-          <el-input v-model="editedData.completed_tasks"></el-input>
-        </el-form-item>
-        <el-form-item label="志愿者ID" prop="volunteerId">
-          <el-input v-model="editedData.volunteer_id"></el-input>
+          <el-input v-model="editedData.completedTasks"></el-input>
         </el-form-item>
       </el-form>
     </el-card>
@@ -48,6 +45,8 @@
 </template>
 
 <script>
+import request from "@/api";
+
 export default {
   name: "ChildCard",
   data() {
@@ -62,15 +61,34 @@ export default {
         grade: "",
         locate: "",
         duty: "",
-        completed_tasks: "",
-        volunteer_id: "",
+        completedTasks: "",
       },
       editRules: {
         username: [
           {required: true, message: '用户名不能为空', trigger: 'blur'},
           {min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur'}
         ],
-        // Add validation rules for other fields as needed
+        score: [
+          {required: true, message: '分数不能为空', trigger: 'blur'},
+        ],
+        name: [
+          {required: true, message: '姓名不能为空', trigger: 'blur'},
+          {min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur'}
+        ],
+        grade: [
+          {required: true, message: '年级不能为空', trigger: 'blur'},
+          {min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur'}
+        ],
+        locate: [
+          {required: true, message: '地点不能为空', trigger: 'blur'},
+          {min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur'}
+        ],
+        duty: [
+          {required: true, message: '持有任务数不能为空', trigger: 'blur'},
+        ],
+        completedTasks: [
+          {required: true, message: '完成任务数不能为空', trigger: 'blur'},
+        ],
       },
     };
   },
@@ -78,15 +96,14 @@ export default {
     addChild() {
       this.type = "add";
       this.editedData = {
-        id: "",
+        id: this.$uuid.v1(),
         username: "",
         score: "",
         name: "",
         grade: "",
         locate: "",
         duty: "",
-        completed_tasks: "",
-        volunteer_id: "",
+        completedTasks: "",
       };
       this.editVisible = true;
     },
@@ -103,11 +120,30 @@ export default {
       this.editVisible = false;
     },
     saveEdit() {
-      this.$msg({
-        type: 'success',
-        message: '保存成功',
-      });
-      this.editVisible = false;
+      request.post('/administrator/user/save', JSON.stringify(this.editedData))
+          .then(res => {
+            if (res.data.code === 0) {
+              this.$msg({
+                type: 'success',
+                message: this.type === 'add' ? '添加成功' : '编辑成功',
+              });
+              location.reload();
+              this.editVisible = false;
+              this.$emit('refresh');
+            } else {
+              this.$msg({
+                type: 'error',
+                message: this.type === 'add' ? '添加失败' : '编辑失败',
+              });
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            this.$msg({
+              type: 'error',
+              message: this.type === 'add' ? '添加失败' : '编辑失败',
+            });
+          });
     },
   },
 };

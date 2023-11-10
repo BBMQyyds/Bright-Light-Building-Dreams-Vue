@@ -141,7 +141,7 @@ export default {
             idNumber: this.user.idNumber,
             password: this.user.password,
           })).then(res => {
-            if (res.data.code === 1) {
+            if (res.data.code === 0) {
               this.$msg({
                 message: '创建成功！',
                 type: 'success',

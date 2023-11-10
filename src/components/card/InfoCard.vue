@@ -7,7 +7,7 @@
     <hr>
     <el-menu class="menu">
       <el-menu-item @click="logout">
-        <img alt="登出" class="logout" src="../../../assets/img/icon/logout.png" style="width: 20px;margin-left: -5px">
+        <img alt="登出" class="logout" src="../../assets/img/icon/logout.png" style="width: 20px;margin-left: -5px">
         <span class="span2">退出登录</span>
       </el-menu-item>
     </el-menu>

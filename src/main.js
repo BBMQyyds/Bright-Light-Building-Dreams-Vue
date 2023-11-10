@@ -16,6 +16,8 @@ import 'highlight.js/styles/androidstudio.css';
 import 'highlight.js/lib/common';
 import hljsVuePlugin from '@highlightjs/vue-plugin';
 import * as echarts from "echarts";
+import UUID from "vue-uuid";
+
 
 let app = createApp(App);
 
@@ -45,6 +47,6 @@ app.config.globalProperties.$resource = resource;
 app.config.globalProperties.$utils = utils;
 app.config.globalProperties.$echarts = echarts;
 
-app.use(hljsVuePlugin).use(store).use(router).use(ElementPlus).use(VueCookies).use(VueWechatTitle).mount('#app');
+app.use(hljsVuePlugin).use(store).use(router).use(ElementPlus).use(VueCookies).use(UUID).use(VueWechatTitle).mount('#app');
 
 export default app;

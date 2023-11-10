@@ -17,7 +17,7 @@
         , 'font-size': '15px','color': 'white', 'font-weight': 'normal'}"
         class="table"
         style="margin-top: 20px;">
-<!--      <el-table-column label="ID" prop="volId"></el-table-column>-->
+      <!--      <el-table-column label="ID" prop="volId"></el-table-column>-->
       <el-table-column label="用户名" prop="volUsername"></el-table-column>
       <el-table-column label="姓名" prop="volName"></el-table-column>
       <el-table-column label="地点" prop="volLocate"></el-table-column>
@@ -49,7 +49,7 @@
 
 <script>
 
-import VolunteerCard from "@/components/bar/card/VolunteerCard.vue";
+import VolunteerCard from "@/components/card/VolunteerCard.vue";
 import request from "@/api";
 
 export default {
@@ -101,6 +101,7 @@ export default {
     },
     handleCurrentPageChange(page) {
       this.currentPage = page;
+      this.search();
     },
     addVolunteer() {
       // 打开添加志愿者的对话框
@@ -119,11 +120,26 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // 执行删除操作
-        this.$message({
-          message: '删除成功',
-          type: 'success',
-          duration: 500
+        request.post('/administrator/user/volunteer/delete', JSON.stringify({
+          volId: volunteer.volId
+        })).then(res => {
+          if (res.data.code === 0) {
+            this.$message({
+              message: '删除成功',
+              type: 'success',
+              duration: 500
+            });
+            location.reload();
+            this.search();
+          } else {
+            this.$message({
+              message: '删除失败',
+              type: 'error',
+              duration: 500
+            });
+          }
+        }).catch(err => {
+          console.log(err);
         });
       }).catch(() => {
         this.$message({

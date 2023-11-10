@@ -17,7 +17,7 @@
         , 'font-size': '15px','color': 'white', 'font-weight': 'normal'}"
         class="table"
         style="margin-top: 20px;">
-<!--      <el-table-column label="ID" prop="id"></el-table-column>-->
+      <!--      <el-table-column label="ID" prop="id"></el-table-column>-->
       <el-table-column label="用户名" prop="username"></el-table-column>
       <el-table-column label="分数" prop="score"></el-table-column>
       <el-table-column label="姓名" prop="name"></el-table-column>
@@ -25,7 +25,6 @@
       <el-table-column label="地点" prop="locate"></el-table-column>
       <el-table-column label="持有任务数" prop="duty"></el-table-column>
       <el-table-column label="完成任务数" prop="completedTasks"></el-table-column>
-      <el-table-column label="志愿者ID" prop="volunteerId"></el-table-column>
       <el-table-column label="操作" width="225">
         <template v-slot="scope">
           <div style="display: flex; justify-content: center;margin-left: 15px">
@@ -52,7 +51,7 @@
 
 
 <script>
-import ChildCard from "@/components/bar/card/ChildCard.vue";
+import ChildCard from "@/components/card/ChildCard.vue";
 import request from "@/api";
 
 export default {
@@ -104,6 +103,7 @@ export default {
     },
     handleCurrentPageChange(page) {
       this.currentPage = page;
+      this.search();
     },
     addChild() {
       console.log(this.$refs.childCard);
@@ -123,12 +123,13 @@ export default {
         request.post('/administrator/user/delete', JSON.stringify({
           id: child.id
         })).then(res => {
-          if (res.data.code === 1) {
+          if (res.data.code === 0) {
             this.$msg({
               message: '删除成功',
               type: 'success',
               duration: 500
             });
+            location.reload();
             this.search();
           } else {
             this.$msg({

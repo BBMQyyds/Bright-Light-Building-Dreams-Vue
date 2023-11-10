@@ -60,7 +60,7 @@
 
 <script>
 
-import InfoCard from "@/components/bar/card/InfoCard.vue";
+import InfoCard from "@/components/card/InfoCard.vue";
 
 export default {
   name: "TopBar",
