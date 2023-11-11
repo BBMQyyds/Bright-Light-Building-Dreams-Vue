@@ -79,15 +79,15 @@ export default {
         if (res.data.code === 0) {
           this.volunteerList = res.data.result.objects;
           this.total = res.data.result.total;
-          for (let i = 0; i < this.volunteerList.length; i++) {
-            //遍历元素的属性
-            for (let key in this.volunteerList[i]) {
-              //如果元素的属性为null，将其置为'暂无'
-              if (typeof this.volunteerList[i][key] === 'undefined' || this.volunteerList[i][key] === null) {
-                this.volunteerList[i][key] = '暂无';
-              }
-            }
-          }
+          // for (let i = 0; i < this.volunteerList.length; i++) {
+          //   //遍历元素的属性
+          //   for (let key in this.volunteerList[i]) {
+          //     //如果元素的属性为null，将其置为'暂无'
+          //     if (typeof this.volunteerList[i][key] === 'undefined' || this.volunteerList[i][key] === null) {
+          //       this.volunteerList[i][key] = '暂无';
+          //     }
+          //   }
+          // }
         } else {
           this.$msg({
             message: '获取志愿者列表失败',
@@ -113,6 +113,7 @@ export default {
       // 更新对话框中的表单数据，根据传递的志愿者信息
     },
     deleteVolunteer(volunteer) {
+      console.log(volunteer.volId);
       // 弹出确认框
       this.$confirm('此操作将永久删除该志愿者账户, 是否继续?', '提示', {
         customClass: 'confirm',
@@ -120,16 +121,16 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        request.post('/administrator/user/volunteer/delete', JSON.stringify({
-          volId: volunteer.volId
-        })).then(res => {
+        request.post('/administrator/user/volunteer/delete?id=' + volunteer.volId).then(res => {
           if (res.data.code === 0) {
             this.$message({
               message: '删除成功',
               type: 'success',
               duration: 500
             });
-            location.reload();
+            setTimeout(() => {
+              location.reload();
+            }, 500);
             this.search();
           } else {
             this.$message({

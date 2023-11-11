@@ -132,12 +132,59 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$msg({
-          message: '保存成功',
-          type: 'success',
-          duration: 500
-        });
-        this.reload();
+        for (let i = 0; i < this.volunteerList.length; i++) {
+          if (this.volunteerList[i].childId !== '') {
+            request.post('/administrator/user/volunteer/assign', JSON.stringify({
+              volId: this.volunteerList[i].volId,
+              childId: this.volunteerList[i].childId
+            })).then(res => {
+              if (res.data.code === 0) {
+                this.$msg({
+                  message: '保存成功',
+                  type: 'success',
+                  duration: 500
+                });
+              } else {
+                this.$msg({
+                  message: '保存失败',
+                  type: 'error',
+                  duration: 500
+                });
+              }
+            }).catch(err => {
+              console.log(err);
+            });
+          }
+        }
+        let success = true;
+        for (let i = 0; i < this.childList.length; i++) {
+          if (this.childList[i].volunteerId !== '') {
+            request.post('/administrator/user/save', JSON.stringify({
+              id: this.childList[i].id,
+              volunteerId: this.childList[i].volunteerId
+            })).then(res => {
+              if (res.data.code === 0) {
+                this.$msg({
+                  message: '保存成功',
+                  type: 'success',
+                  duration: 500
+                });
+              } else {
+                success = false;
+                this.$msg({
+                  message: '保存失败',
+                  type: 'error',
+                  duration: 500
+                });
+              }
+            }).catch(err => {
+              console.log(err);
+            });
+          }
+        }
+        if (success) {
+          console.log('success');
+        }
       }).catch(() => {
         this.$msg({
           message: '已取消保存',
@@ -173,7 +220,7 @@ export default {
       });
     },
     searchChild() {
-      request.post('/administrator/user/search', JSON.stringify({
+      request.post('/administrator/user/search/childInNeed', JSON.stringify({
         name: this.searchChildKeyword,
         page: this.currentChildPage,
         size: this.pageSize,

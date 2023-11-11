@@ -129,7 +129,9 @@ export default {
               type: 'success',
               duration: 500
             });
-            location.reload();
+            setTimeout(() => {
+              location.reload();
+            }, 500);
             this.search();
           } else {
             this.$msg({

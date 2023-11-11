@@ -6,6 +6,6 @@ module.exports = defineConfig({
     outputDir: 'zhitale',
     devServer: {
         port: 80,
-        proxy: 'http://123.56.248.217:63000',
+        proxy: 'http://123.249.26.56:63000',
     },
 })

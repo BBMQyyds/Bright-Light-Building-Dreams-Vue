@@ -26,7 +26,7 @@
           <el-input v-model="editedData.volDuty"></el-input>
         </el-form-item>
         <el-form-item label="完成任务数" prop="volCorrectedTasks">
-          <el-input v-model="editedData.completedTasks"></el-input>
+          <el-input v-model="editedData.volCorrectedTasks"></el-input>
         </el-form-item>
         <el-form-item label="电话" prop="volTel">
           <el-input v-model="editedData.volTel"></el-input>
@@ -91,7 +91,7 @@ export default {
         ],
         volTel: [
           {required: true, message: '电话不能为空', trigger: 'blur'},
-          {min: 10000000000, max: 19999999999, message: '电话必须为 11 位数字', trigger: 'blur'}
+          {min: 11, max: 11, message: '电话必须为 11 位数字', trigger: 'blur'}
         ],
         volSfz: [
           {required: true, message: '身份证号不能为空', trigger: 'blur'},
@@ -104,15 +104,15 @@ export default {
     addVolunteer() {
       this.type = "add";
       this.editedData = {
-        id: this.$uuid.v1(),
-        username: "",
-        score: "",
-        name: "",
-        grade: "",
-        locate: "",
-        duty: "",
-        completedTasks: "",
-        volunteer_id: "",
+        volId: this.$uuid.v1(),
+        volUsername: "",
+        volName: "",
+        volLocate: "",
+        volOrganization: "",
+        volDuty: "",
+        volCorrectedTasks: "",
+        volTel: "",
+        volSfz: "",
       };
       this.editVisible = true;
     },
@@ -137,6 +137,9 @@ export default {
             type: 'success',
             message: '保存成功',
           });
+          setTimeout(() => {
+            location.reload();
+          }, 500);
           this.editVisible = false;
         } else {
           this.$message({

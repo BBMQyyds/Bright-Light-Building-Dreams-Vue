@@ -3,37 +3,34 @@
              class="width" destroy-on-close>
     <template #header="{title}">
       <div style="font-size: 24px; font-weight: bolder;text-align: center; color: black;margin-top: 5px">
-        {{ this.type === 'add' ? '添加儿童账户' : '编辑儿童账户' }}
+        {{ this.type === 'add' ? '添加学习任务' : '编辑学习任务' }}
       </div>
     </template>
     <el-card class="box-card edit-card">
-      <el-form ref="editForm"
-               :model="editedData"
-               :rules="editRules"
-               label-width="100px">
+      <el-form ref="editForm" :model="editedData" :rules="editRules" label-width="100px">
         <el-form-item v-if="type === 'edit'" label="ID" prop="id">
           <el-input v-model="editedData.id" :readonly="true"></el-input>
         </el-form-item>
-        <el-form-item label="用户名" prop="username">
-          <el-input v-model="editedData.username"></el-input>
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="editedData.name"></el-input>
+        </el-form-item>
+        <el-form-item label="内容" prop="content">
+          <el-input v-model="editedData.content"></el-input>
         </el-form-item>
         <el-form-item label="分数" prop="score">
           <el-input v-model="editedData.score"></el-input>
         </el-form-item>
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="editedData.name"></el-input>
+        <el-form-item label="科目" prop="subject">
+          <el-input v-model="editedData.subject"></el-input>
         </el-form-item>
-        <el-form-item label="年级" prop="grade">
+        <el-form-item label="等级" prop="grade">
           <el-input v-model="editedData.grade"></el-input>
         </el-form-item>
-        <el-form-item label="地点" prop="locate">
-          <el-input v-model="editedData.locate"></el-input>
+        <el-form-item label="状态" prop="status">
+          <el-input v-model="editedData.status"></el-input>
         </el-form-item>
-        <el-form-item label="持有任务数" prop="duty">
-          <el-input v-model="editedData.duty"></el-input>
-        </el-form-item>
-        <el-form-item label="完成任务数" prop="completedTasks">
-          <el-input v-model="editedData.completedTasks"></el-input>
+        <el-form-item label="是否必做" prop="mustDo">
+          <el-input v-model="editedData.mustDo"></el-input>
         </el-form-item>
       </el-form>
     </el-card>
@@ -48,66 +45,72 @@
 import request from "@/api";
 
 export default {
-  name: "ChildCard",
+  name: "TaskCard",
   data() {
     return {
       editVisible: false,
       type: "",
       editedData: {
         id: "",
-        username: "",
-        score: "",
         name: "",
+        content: "",
+        score: "",
+        startTime: "",
+        finishTime: "",
+        subject: "",
         grade: "",
-        locate: "",
-        duty: "",
-        completedTasks: "",
+        status: "",
+        mustDo: "",
       },
       editRules: {
-        username: [
-          {required: true, message: '用户名不能为空', trigger: 'blur'},
-          {min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur'}
-        ],
         score: [
           {required: true, message: '分数不能为空', trigger: 'blur'},
         ],
-        name: [
-          {required: true, message: '姓名不能为空', trigger: 'blur'},
-          {min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur'}
+        startTime: [
+          {required: true, message: '开始时间不能为空', trigger: 'blur'},
+        ],
+        finishTime: [
+          {required: true, message: '结束时间不能为空', trigger: 'blur'},
+        ],
+        subject: [
+          {required: true, message: '科目不能为空', trigger: 'blur'},
         ],
         grade: [
-          {required: true, message: '年级不能为空', trigger: 'blur'},
-          {min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur'}
+          {required: true, message: '等级不能为空', trigger: 'blur'},
         ],
-        locate: [
-          {required: true, message: '地点不能为空', trigger: 'blur'},
-          {min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur'}
+        status: [
+          {required: true, message: '状态不能为空', trigger: 'blur'},
         ],
-        duty: [
-          {required: true, message: '持有任务数不能为空', trigger: 'blur'},
+        mustDo: [
+          {required: true, message: '是否必做不能为空', trigger: 'blur'},
         ],
-        completedTasks: [
-          {required: true, message: '完成任务数不能为空', trigger: 'blur'},
+        content: [
+          {required: true, message: '内容不能为空', trigger: 'blur'},
+        ],
+        name: [
+          {required: true, message: '名称不能为空', trigger: 'blur'},
         ],
       },
     };
   },
   methods: {
-    addChild() {
+    addTask() {
       this.type = "add";
       this.editedData = {
         id: this.$uuid.v1(),
-        username: "",
-        score: "",
         name: "",
+        content: "",
+        score: "",
+        startTime: "",
+        finishTime: "",
+        subject: "",
         grade: "",
-        locate: "",
-        duty: "",
-        completedTasks: "",
+        status: "",
+        mustDo: "",
       };
       this.editVisible = true;
     },
-    editChild(data) {
+    editTask(data) {
       this.type = "edit";
       this.editedData = {...data};
       this.editVisible = true;
@@ -120,7 +123,7 @@ export default {
       this.editVisible = false;
     },
     saveEdit() {
-      request.post('/administrator/user/save', JSON.stringify(this.editedData))
+      request.post('/administrator/task/create', JSON.stringify(this.editedData))
           .then(res => {
             if (res.data.code === 0) {
               this.$msg({
