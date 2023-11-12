@@ -11,10 +11,12 @@
           <el-input v-model="editedData.id" :readonly="true"></el-input>
         </el-form-item>
         <el-form-item label="开始时间" prop="startTime" style="margin-left: 42px;margin-bottom: 20px!important;">
-          <el-date-picker v-model="editedData.startTime" type="datetime" placeholder="选择开始时间"></el-date-picker>
+          <el-date-picker type="datetime" style="margin-bottom: 10px!important;"
+                          v-model="editedData.startTime" placeholder="选择开始时间"></el-date-picker>
         </el-form-item>
         <el-form-item label="结束时间" prop="finishTime" style="margin-left: 42px;margin-bottom: 20px!important">
-          <el-date-picker v-model="editedData.finishTime" type="datetime" placeholder="选择结束时间"></el-date-picker>
+          <el-date-picker type="datetime" style="margin-bottom: 10px!important;"
+                          v-model="editedData.finishTime" placeholder="选择结束时间"></el-date-picker>
         </el-form-item>
       </el-form>
     </el-card>
@@ -55,34 +57,53 @@ export default {
       this.editVisible = false;
     },
     saveEdit() {
-      request
-          .post('/administrator/task/create', JSON.stringify(this.editedData))
-          .then((res) => {
-            if (res.data.code === 0) {
-              this.$msg({
-                type: 'success',
-                message: this.type === 'add' ? '添加成功' : '编辑成功',
-              });
-              setTimeout(() => {
-                location.reload();
-              }, 500);
-              this.editVisible = false;
-              this.$emit('refresh');
-            } else {
-              this.$msg({
-                type: 'error',
-                message: this.type === 'add' ? '添加失败' : '编辑失败',
-              });
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-            this.$msg({
-              type: 'error',
-              message: this.type === 'add' ? '添加失败' : '编辑失败',
-            });
+      if (this.editedData.startTime >= this.editedData.finishTime) {
+        this.$msg({
+          type: 'error',
+          message: '结束时间必须大于开始时间',
+        });
+        return;
+      }
+      request.post('/administrator/task/create', JSON.stringify({
+        id: this.editedData.id,
+        startTime: this.formatDate(this.editedData.startTime),
+        finishTime: this.formatDate(this.editedData.finishTime),
+      })).then((res) => {
+        if (res.data.code === 0) {
+          this.$msg({
+            type: 'success',
+            message: this.type === 'add' ? '添加成功' : '编辑成功',
           });
+          setTimeout(() => {
+            location.reload();
+          }, 500);
+          this.editVisible = false;
+          this.$emit('refresh');
+        } else {
+          this.$msg({
+            type: 'error',
+            message: this.type === 'add' ? '添加失败' : '编辑失败',
+          });
+        }
+      }).catch((err) => {
+        console.log(err);
+        this.$msg({
+          type: 'error',
+          message: this.type === 'add' ? '添加失败' : '编辑失败',
+        });
+      });
     },
+    formatDate(inputDate) {
+      const date = new Date(inputDate);
+
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      const seconds = String(date.getSeconds()).padStart(2, '0');
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
   },
 };
 </script>

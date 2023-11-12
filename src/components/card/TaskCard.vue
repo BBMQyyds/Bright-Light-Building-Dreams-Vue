@@ -125,7 +125,7 @@ export default {
     saveEdit() {
       request.post('/administrator/task/create', JSON.stringify(this.editedData))
           .then(res => {
-            if (res.data.code === 0) {
+            if (res.data.code === 0 || res.data.code === -1) {
               this.$msg({
                 type: 'success',
                 message: this.type === 'add' ? '添加成功' : '编辑成功',

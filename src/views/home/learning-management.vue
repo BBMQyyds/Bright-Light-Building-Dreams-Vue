@@ -31,23 +31,43 @@
       </el-table-column>
       <el-table-column label="结束时间" prop="finishTime">
         <template v-slot="scope">
-          <el-button type="primary" @click="publishTask(scope.row)"
-                     v-if="scope.row.finishTime === null || scope.row.finishTime === ''">发布任务
-          </el-button>
+          <span v-if="scope.row.finishTime === null || scope.row.finishTime === ''">尚未发布</span>
+          <span v-else>{{ scope.row.finishTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="视频" prop="video">
+      <el-table-column label="视频" prop="video" width="200">
         <template v-slot="scope">
-          <el-button type="primary" @click="toVideo(scope.row.video)"
+          <el-button type="text" @click="toVideo(scope.row.video)"
                      v-if="scope.row.video !== null && scope.row.video !== ''">查看视频
           </el-button>
+          <div v-else>
+            <el-upload :auto-upload="false" :file-list="scope.row.videoList"
+                       :on-change="(file, fileList) => {handleVideoChange(file, fileList, scope.row.id)}"
+                       accept="video/mp4,video/avi,video/mkv,video/wmv,video/rmvb,video/mov,video/flv"
+                       action="#" class="upload" multiple>
+              <el-button type="primary">上传视频</el-button>
+            </el-upload>
+            <el-button v-if="scope.row.videoList.length > 0" type="primary" @click="uploadVideo(scope.row.id)">
+              确认上传
+            </el-button>
+          </div>
         </template>
       </el-table-column>
-      <el-table-column label="照片" prop="taskPhoto">
+      <el-table-column label="照片" prop="taskPhoto" width="200">
         <template v-slot="scope">
-          <el-button type="primary" @click="toPhoto(scope.row.taskPhoto)"
+          <el-button type="text" @click="toPhoto(scope.row.taskPhoto)"
                      v-if="scope.row.taskPhoto !== null && scope.row.taskPhoto !== ''">查看照片
           </el-button>
+          <div v-else>
+            <el-upload :auto-upload="false" :file-list="scope.row.photoList"
+                       :on-change="(file, fileList) => {handlePhotoChange(file, fileList, scope.row.id)}"
+                       accept="image/*" action="#" class="upload" multiple>
+              <el-button type="primary">上传照片</el-button>
+            </el-upload>
+            <el-button v-if="scope.row.photoList.length > 0" type="primary" @click="uploadPhoto(scope.row.id)">
+              确认上传
+            </el-button>
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="科目" prop="subject"></el-table-column>
@@ -63,7 +83,7 @@
             </el-button>
             <hr>
             <div style="text-align: left;">
-              <el-select v-model="scope.row.child_id" placeholder="分配任务给儿童" size="small">
+              <el-select v-model="scope.row.child_id" multiple placeholder="分配任务给儿童" size="normal">
                 <el-option
                     v-for="item in childList"
                     :key="item.id"
@@ -74,7 +94,7 @@
             </div>
             <hr>
             <div style="text-align: left;">
-              <el-select v-model="scope.row.volunteer_id" placeholder="分配任务给志愿者" size="small">
+              <el-select v-model="scope.row.volunteer_id" multiple placeholder="分配任务给志愿者" size="normal">
                 <el-option
                     v-for="item in volunteerList"
                     :key="item.volId"
@@ -103,7 +123,7 @@
 
 <script>
 
-import request from "@/api";
+import request, {fileRequest} from "@/api";
 import TaskCard from "@/components/card/TaskCard.vue";
 import PublishCard from "@/components/card/PublishCard.vue";
 
@@ -129,6 +149,70 @@ export default {
     };
   },
   methods: {
+    uploadVideo(id) {
+      let formData = new FormData();
+      for (let i = 0; i < this.taskList.length; i++) {
+        if (this.taskList[i].id === id) {
+          formData.append('file', this.taskList[i].videoList[0].raw);
+          formData.append('taskId', id);
+          break;
+        }
+      }
+      fileRequest.post('/administrator/task/upload/files', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(res => {
+        if (res.data.code === 0) {
+          this.$msg({
+            message: '上传成功',
+            type: 'success',
+            duration: 500
+          });
+          this.search();
+        } else {
+          this.$msg({
+            message: '上传失败',
+            type: 'error',
+            duration: 500
+          });
+        }
+      }).catch(err => {
+        console.log(err);
+      });
+    },
+    uploadPhoto(id) {
+      let formData = new FormData();
+      for (let i = 0; i < this.taskList.length; i++) {
+        if (this.taskList[i].id === id) {
+          formData.append('file', this.taskList[i].photoList[0].raw);
+          formData.append('taskId', id);
+          break;
+        }
+      }
+      fileRequest.post('/administrator/task/upload/files', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(res => {
+        if (res.data.code === 0) {
+          this.$msg({
+            message: '上传成功',
+            type: 'success',
+            duration: 500
+          });
+          this.search();
+        } else {
+          this.$msg({
+            message: '上传失败',
+            type: 'error',
+            duration: 500
+          });
+        }
+      }).catch(err => {
+        console.log(err);
+      });
+    },
     search() {
       request.post('/administrator/task/search?pageNo=' + this.currentPage + '&pageSize=' + this.pageSize, JSON.stringify({
         name: this.searchKeyword,
@@ -139,6 +223,8 @@ export default {
           for (let i = 0; i < this.taskList.length; i++) {
             this.taskList[i].child_id = '';
             this.taskList[i].volunteer_id = '';
+            this.taskList[i].videoList = [];
+            this.taskList[i].photoList = [];
           }
         } else {
           this.$msg({
@@ -219,25 +305,60 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        request.post('/administrator/task/save', JSON.stringify(this.taskList)).then(res => {
-          if (res.data.code === 0) {
-            this.$msg({
-              message: '保存成功',
-              type: 'success',
-              duration: 500
-            });
-            location.reload();
-
-          } else {
-            this.$msg({
-              message: '保存失败',
-              type: 'error',
-              duration: 500
+        let success = true;
+        for (let i = 0; i < this.taskList.length; i++) {
+          if (this.taskList[i].child_id !== null && this.taskList[i].child_id.length !== 0) {
+            let children = [];
+            for (let j = 0; j < this.taskList[i].child_id.length; j++) {
+              children.push({
+                id: this.taskList[i].child_id[j],
+              });
+            }
+            request.post('/administrator/task/assignChild', JSON.stringify({
+              id: this.taskList[i].id,
+              children: children,
+            })).then(res => {
+              if (res.data.code !== 0) {
+                success = false;
+              }
+            }).catch(err => {
+              console.log(err);
             });
           }
-        }).catch(err => {
-          console.log(err);
-        });
+          if (this.taskList[i].volunteer_id !== null && this.taskList[i].volunteer_id.length !== 0) {
+            let child = [];
+            for (let j = 0; j < this.taskList[i].volunteer_id.length; j++) {
+              child.push({
+                id: this.taskList[i].volunteer_id[j],
+              });
+            }
+            request.post('/administrator/task/assignVol', JSON.stringify({
+              id: this.taskList[i].id,
+              child: child,
+            })).then(res => {
+              if (res.data.code !== 0) {
+                success = false;
+              }
+            }).catch(err => {
+              console.log(err);
+            });
+          }
+        }
+        if (success) {
+          this.$msg({
+            message: '保存成功',
+            type: 'success',
+            duration: 500
+          });
+          location.reload();
+        } else {
+          this.$msg({
+            message: '保存失败',
+            type: 'error',
+            duration: 500
+          });
+          location.reload();
+        }
       }).catch(() => {
         this.$msg({
           message: '已取消保存',
@@ -282,6 +403,46 @@ export default {
         });
       });
     },
+    handleVideoChange(file, fileList, id) {
+      //判断文件大小不超过 100MB
+      if (file.size > 100 * 1024 * 1024) {
+        this.$msg({
+          customClass: 'messageIndex',
+          duration: 1000,
+          type: 'warning',
+          message: '文件大小不能超过 100MB!'
+        });
+        fileList.pop();
+      }
+      if (fileList.length > 0) {
+        for (let i = 0; i < this.taskList.length; i++) {
+          if (this.taskList[i].id === id) {
+            this.taskList[i].videoList = [fileList[fileList.length - 1]];
+            break;
+          }
+        }
+      }
+    },
+    handlePhotoChange(file, fileList, id) {
+      //判断文件大小不超过 10MB
+      if (file.size > 10 * 1024 * 1024) {
+        this.$msg({
+          customClass: 'messageIndex',
+          duration: 1000,
+          type: 'warning',
+          message: '文件大小不能超过 10MB!'
+        });
+        fileList.pop();
+      }
+      if (fileList.length > 0) {
+        for (let i = 0; i < this.taskList.length; i++) {
+          if (this.taskList[i].id === id) {
+            this.taskList[i].photoList = [fileList[fileList.length - 1]];
+            break;
+          }
+        }
+      }
+    },
   }
 };
 </script>
@@ -295,7 +456,7 @@ export default {
 }
 
 .main {
-  width: 1600px;
+  width: 1800px;
   margin: 40px auto auto;
 }
 

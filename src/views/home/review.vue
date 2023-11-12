@@ -12,9 +12,11 @@
           class="table"
           style="margin: 20px;">
         <!-- 列定义 -->
-        <el-table-column label="志愿者用户名" prop="volUsername"></el-table-column>
+        <el-table-column label="用户名" prop="volUsername"></el-table-column>
         <el-table-column label="姓名" prop="volName"></el-table-column>
-        <el-table-column label="是否审核通过">
+        <el-table-column label="地点" prop="volLocate"></el-table-column>
+        <el-table-column label="组织" prop="volOrganization"></el-table-column>
+        <el-table-column label="审核">
           <template slot-scope="scope">
             <el-switch
                 v-model="scope.row.if_pass"
@@ -24,6 +26,15 @@
           </template>
         </el-table-column>
       </el-table>
+
+      <el-pagination
+          :current-page="volunteerCurrentPage"
+          :page-size="pageSize"
+          :page-sizes="[10, 20, 30, 40]"
+          :total="volunteerTotal"
+          layout="total, prev, pager, next"
+          @current-change="handleVolunteerCurrentPageChange">
+      </el-pagination>
     </div>
 
     <!-- 志愿组织资质审核 -->
@@ -38,8 +49,8 @@
           class="table"
           style="margin: 20px;">
         <!-- 列定义 -->
-        <el-table-column label="组织名称" prop="org_name"></el-table-column>
-        <el-table-column label="是否审核通过">
+        <el-table-column label="名称" prop="org_name"></el-table-column>
+        <el-table-column label="审核">
           <template slot-scope="scope">
             <el-switch
                 v-model="scope.row.org_pass_if"
@@ -49,17 +60,33 @@
           </template>
         </el-table-column>
       </el-table>
+
+      <el-pagination
+          :current-page="organizationCurrentPage"
+          :page-size="pageSize"
+          :page-sizes="[10, 20, 30, 40]"
+          :total="organizationTotal"
+          layout="total, prev, pager, next"
+          @current-change="handleOrganizationCurrentPageChange">
+      </el-pagination>
     </div>
   </div>
 </template>
 
 <script>
+import request from "@/api";
+
 export default {
   name: "review",
   data() {
     return {
       volunteerListToReview: [], // 待审核的志愿者列表
       organizationListToReview: [], // 待审核的志愿组织列表
+      volunteerCurrentPage: 1, // 志愿者列表的当前页码
+      organizationCurrentPage: 1, // 志愿组织列表的当前页码
+      pageSize: 5, // 默认每页显示5行
+      volunteerTotal: 0, // 志愿者列表的总行数
+      organizationTotal: 0, // 志愿组织列表的总行数
     };
   },
   created() {
@@ -70,6 +97,24 @@ export default {
   methods: {
     fetchVolunteersToReview() {
       // 发起请求获取待审核的志愿者列表，并将结果赋给 volunteerListToReview
+      request.post('/administrator/user/volunteer/search', JSON.stringify({
+        ifPass: '0',
+        page: this.currentPage,
+        size: this.pageSize
+      })).then(res => {
+        if (res.data.code === 0) {
+          this.volunteerList = res.data.result.objects;
+          this.volunteerTotal = res.data.result.total;
+        } else {
+          this.$msg({
+            message: '获取志愿者列表失败',
+            type: 'error',
+            duration: 500
+          });
+        }
+      }).catch(err => {
+        console.log(err);
+      });
     },
     fetchOrganizationsToReview() {
       // 发起请求获取待审核的志愿组织列表，并将结果赋给 organizationListToReview
@@ -81,6 +126,16 @@ export default {
     updateOrganizationPassStatus(organization) {
       // 发起请求更新志愿组织的审核状态
       // organization 参数包含组织的信息，以及新的审核状态
+    },
+    handleVolunteerCurrentPageChange(page) {
+      // 处理志愿者列表的页码变化
+      this.volunteerCurrentPage = page;
+      this.fetchVolunteersToReview();
+    },
+    handleOrganizationCurrentPageChange(page) {
+      // 处理志愿组织列表的页码变化
+      this.organizationCurrentPage = page;
+      this.fetchOrganizationsToReview();
     },
   },
 };

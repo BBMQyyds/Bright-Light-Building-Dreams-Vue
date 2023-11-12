@@ -5,7 +5,7 @@
       <el-col :span="4">
         <el-input v-model="searchKeyword" class="search" placeholder="搜索志愿者账户" @input="search"></el-input>
       </el-col>
-      <el-col :span="2" class="text-right">
+      <el-col :span="2" class="text-right" style="margin-left: 25px">
         <el-button type="primary" @click="addVolunteer">添加志愿者</el-button>
       </el-col>
     </el-row>

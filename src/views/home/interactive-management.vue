@@ -132,33 +132,9 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        for (let i = 0; i < this.volunteerList.length; i++) {
-          if (this.volunteerList[i].childId !== '') {
-            request.post('/administrator/user/volunteer/assign', JSON.stringify({
-              volId: this.volunteerList[i].volId,
-              childId: this.volunteerList[i].childId
-            })).then(res => {
-              if (res.data.code === 0) {
-                this.$msg({
-                  message: '保存成功',
-                  type: 'success',
-                  duration: 500
-                });
-              } else {
-                this.$msg({
-                  message: '保存失败',
-                  type: 'error',
-                  duration: 500
-                });
-              }
-            }).catch(err => {
-              console.log(err);
-            });
-          }
-        }
         let success = true;
         for (let i = 0; i < this.childList.length; i++) {
-          if (this.childList[i].volunteerId !== '') {
+          if (this.childList[i].volunteerId !== null && this.childList[i].volunteerId !== '') {
             request.post('/administrator/user/save', JSON.stringify({
               id: this.childList[i].id,
               volunteerId: this.childList[i].volunteerId
@@ -183,7 +159,19 @@ export default {
           }
         }
         if (success) {
-          console.log('success');
+          this.$msg({
+            message: '保存成功',
+            type: 'success',
+            duration: 500
+          });
+          location.reload();
+        } else {
+          this.$msg({
+            message: '保存失败',
+            type: 'error',
+            duration: 500
+          });
+          location.reload();
         }
       }).catch(() => {
         this.$msg({

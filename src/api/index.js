@@ -85,7 +85,7 @@ request.interceptors.request.use(config => {
 const fileRequest = axios.create({
     timeout: 8000,
     withCredentials: true,
-    headers: {'Content-Type': 'application/json;charset=utf-8'},
+    headers: {'Content-Type': 'multipart/form-data'},
     retry: 3, // 最大重试次数
     retryDelay: 1000, // 重试延迟时间（毫秒）
 })
