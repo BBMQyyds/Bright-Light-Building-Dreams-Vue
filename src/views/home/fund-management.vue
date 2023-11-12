@@ -25,14 +25,9 @@ export default {
       <BarGraph2 :height="'360px'" :width="'820px'"></BarGraph2>
     </div>
   </div>
-  <div style="display: flex">
     <div id="graph3">
       <BarGraph3></BarGraph3>
     </div>
-    <div id="graph4">
-      <BarGraph4></BarGraph4>
-    </div>
-  </div>
 
 </template>
 
@@ -42,15 +37,16 @@ export default {
 }
 
 #graph1 {
-  margin-left: 100px;
+  margin-left: 50px;
 }
 
 #graph2 {
   margin-top: 50px;
 }
 
-#graph3 {
-  margin-top: 50px;
+#graph3{
+    margin-left: -50%;
+    margin-top:-12%;
 }
 
 </style>
