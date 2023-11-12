@@ -8,7 +8,7 @@
         <el-input v-model="searchKeyword" class="search" placeholder="搜索任务" @input="search"></el-input>
       </el-col>
       <el-col :span="2" class="text-right" style="display: flex;align-items: center">
-        <el-button type="primary" @click="addTask" style="margin-right: 20px">添加任务</el-button>
+        <el-button style="margin-right: 20px" type="primary" @click="addTask">添加任务</el-button>
         <el-button type="primary" @click="save">保存分配</el-button>
       </el-col>
     </el-row>
@@ -25,8 +25,8 @@
       <el-table-column label="内容" prop="content"></el-table-column>
       <el-table-column label="开始时间" prop="startTime">
         <template v-slot="scope">
-          <el-button type="primary" @click="publishTask(scope.row)"
-                     v-if="scope.row.startTime === null || scope.row.startTime === ''">发布任务
+          <el-button v-if="scope.row.startTime === null || scope.row.startTime === ''" type="primary"
+                     @click="publishTask(scope.row)">发布任务
           </el-button>
         </template>
       </el-table-column>
@@ -38,8 +38,8 @@
       </el-table-column>
       <el-table-column label="视频" prop="video" width="200">
         <template v-slot="scope">
-          <el-button type="text" @click="toVideo(scope.row.video)"
-                     v-if="scope.row.video !== null && scope.row.video !== ''">查看视频
+          <el-button v-if="scope.row.video !== null && scope.row.video !== ''" type="text"
+                     @click="toVideo(scope.row.video)">查看视频
           </el-button>
           <div v-else>
             <el-upload :auto-upload="false" :file-list="scope.row.videoList"
@@ -56,8 +56,8 @@
       </el-table-column>
       <el-table-column label="照片" prop="taskPhoto" width="200">
         <template v-slot="scope">
-          <el-button type="text" @click="toPhoto(scope.row.taskPhoto)"
-                     v-if="scope.row.taskPhoto !== null && scope.row.taskPhoto !== ''">查看照片
+          <el-button v-if="scope.row.taskPhoto !== null && scope.row.taskPhoto !== ''" type="text"
+                     @click="toPhoto(scope.row.taskPhoto)">查看照片
           </el-button>
           <div v-else>
             <el-upload :auto-upload="false" :file-list="scope.row.photoList"
@@ -97,29 +97,19 @@
                 </el-option>
               </el-select>
             </div>
-            <!--            <div style="text-align: left;">-->
-            <!--              <el-select v-model="scope.row.volunteer_id" multiple placeholder="分配任务给志愿者" size="normal">-->
-            <!--                <el-option-->
-            <!--                    v-for="item in volunteerList"-->
-            <!--                    :key="item.volId"-->
-            <!--                    :label="item.volName"-->
-            <!--                    :value="item.volId">-->
-            <!--                </el-option>-->
-            <!--              </el-select>-->
-            <!--            </div>-->
           </div>
         </template>
       </el-table-column>
     </el-table>
     <p></p>
     <el-pagination
-        style="margin-bottom: 40px"
-        :hide-on-single-page="false"
         :current-page="currentPage"
+        :hide-on-single-page="false"
         :page-size="pageSize"
         :page-sizes="[5, 10, 20, 40]"
         :total="total"
         layout="total, prev, pager, next"
+        style="margin-bottom: 40px"
         @current-change="handleCurrentPageChange">
     </el-pagination>
   </div>
@@ -310,24 +300,6 @@ export default {
               console.log(err);
             });
           }
-          // if (this.taskList[i].volunteer_id !== null && this.taskList[i].volunteer_id.length !== 0) {
-          //   let child = [];
-          //   for (let j = 0; j < this.taskList[i].volunteer_id.length; j++) {
-          //     child.push({
-          //       id: this.taskList[i].volunteer_id[j],
-          //     });
-          //   }
-          //   request.post('/administrator/task/assignVol', JSON.stringify({
-          //     id: this.taskList[i].id,
-          //     child: child,
-          //   })).then(res => {
-          //     if (res.data.code !== 0) {
-          //       success = false;
-          //     }
-          //   }).catch(err => {
-          //     console.log(err);
-          //   });
-          // }
         }
         setTimeout(() => {
           if (success) {

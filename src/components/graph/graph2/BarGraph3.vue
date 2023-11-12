@@ -1,5 +1,6 @@
 <template>
-  <div id="mychart" :style="myChartStyle" class="echart"></div>
+  <div id="mychart"
+       :style="myChartStyle" class="echart" style="z-index: -1!important;"></div>
 </template>
 <script>
 import * as echarts from "echarts";

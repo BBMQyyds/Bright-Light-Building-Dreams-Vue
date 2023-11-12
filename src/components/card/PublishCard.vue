@@ -11,12 +11,12 @@
           <el-input v-model="editedData.id" :readonly="true"></el-input>
         </el-form-item>
         <el-form-item label="开始时间" prop="startTime" style="margin-left: 42px;margin-bottom: 20px!important;">
-          <el-date-picker type="datetime" style="margin-bottom: 10px!important;"
-                          v-model="editedData.startTime" placeholder="选择开始时间"></el-date-picker>
+          <el-date-picker v-model="editedData.startTime" placeholder="选择开始时间"
+                          style="margin-bottom: 10px!important;" type="datetime"></el-date-picker>
         </el-form-item>
         <el-form-item label="结束时间" prop="finishTime" style="margin-left: 42px;margin-bottom: 20px!important">
-          <el-date-picker type="datetime" style="margin-bottom: 10px!important;"
-                          v-model="editedData.finishTime" placeholder="选择结束时间"></el-date-picker>
+          <el-date-picker v-model="editedData.finishTime" placeholder="选择结束时间"
+                          style="margin-bottom: 10px!important;" type="datetime"></el-date-picker>
         </el-form-item>
       </el-form>
     </el-card>

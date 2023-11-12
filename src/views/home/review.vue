@@ -16,6 +16,10 @@
         <el-table-column label="姓名" prop="volName"></el-table-column>
         <el-table-column label="地点" prop="volLocate"></el-table-column>
         <el-table-column label="组织" prop="volOrganization"></el-table-column>
+        <el-table-column label="材料">
+          <el-button type="text" @click="downloadFile(this.fileNames[Math.floor(Math.random() * 6)])">下载材料
+          </el-button>
+        </el-table-column>
         <el-table-column label="审核">
           <template v-slot="scope">
             <div style="display: flex; justify-content: center;margin-left: 15px">
@@ -54,6 +58,11 @@
         <el-table-column label="地点" prop="orgAddress"></el-table-column>
         <el-table-column label="介绍" prop="orgIntroduction"></el-table-column>
         <el-table-column label="人数" prop="orgNumber"></el-table-column>
+        <el-table-column label="材料">
+          <el-button type="text" @click="downloadFile(this.fileNames[Math.floor(Math.random() * 6)])">
+            下载材料
+          </el-button>
+        </el-table-column>
         <el-table-column label="审核">
           <template v-slot="scope">
             <div style="display: flex; justify-content: center;margin-left: 15px">
@@ -92,12 +101,14 @@ export default {
       pageSize: 5, // 默认每页显示5行
       volunteerTotal: 0, // 志愿者列表的总行数
       organizationTotal: 0, // 志愿组织列表的总行数
+      fileNames: [],
     };
   },
   created() {
     // 在组件创建时，获取待审核的志愿者和志愿组织列表
     this.fetchVolunteersToReview();
     this.fetchOrganizationsToReview();
+    this.initFilenames();
   },
   methods: {
     fetchVolunteersToReview() {
@@ -122,6 +133,7 @@ export default {
         console.log(err);
       });
     },
+
     fetchOrganizationsToReview() {
       request.post('/administrator/user/organization/search/', JSON.stringify({
         orgName: '',
@@ -132,7 +144,6 @@ export default {
         if (res.data.code === 0) {
           this.organizationListToReview = res.data.result.objects;
           this.organizationTotal = res.data.result.total;
-          console.log(this.organizationListToReview);
         } else {
           this.$msg({
             message: '获取志愿组织列表失败',
@@ -155,6 +166,7 @@ export default {
             type: 'success',
             duration: 500
           });
+          location.reload();
           this.fetchVolunteersToReview();
         } else {
           this.$msg({
@@ -169,25 +181,40 @@ export default {
     },
     rejectVolunteer(row) {
       // 驳回志愿者的审核
-      request.post('/administrator/qualifications/vol/reject', JSON.stringify({
-        volId: row.volId
-      })).then(res => {
-        if (res.data.code === 0) {
-          this.$msg({
-            message: '驳回志愿者审核成功',
-            type: 'success',
-            duration: 500
-          });
-          this.fetchVolunteersToReview();
-        } else {
-          this.$msg({
-            message: '驳回志愿者审核失败',
-            type: 'error',
-            duration: 500
-          });
-        }
-      }).catch(err => {
-        console.log(err);
+      this.$prompt('请输入驳回理由', '提示', {
+        customClass: 'reject',
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /\S/,
+        inputErrorMessage: '请输入驳回理由'
+      }).then(({value}) => {
+        request.post('/administrator/qualifications/vol/reject', JSON.stringify({
+          volId: row.volId,
+          reason: value
+        })).then(res => {
+          if (res.data.code === 0) {
+            this.$msg({
+              message: '驳回志愿者审核成功',
+              type: 'success',
+              duration: 500
+            });
+            location.reload();
+            this.fetchVolunteersToReview();
+          } else {
+            this.$msg({
+              message: '驳回志愿者审核失败',
+              type: 'error',
+              duration: 500
+            });
+          }
+        }).catch(err => {
+          console.log(err);
+        });
+      }).catch(() => {
+        this.$msg({
+          type: 'info',
+          message: '取消输入'
+        });
       });
     },
     passOrganization(row) {
@@ -201,6 +228,7 @@ export default {
             type: 'success',
             duration: 500
           });
+          location.reload();
           this.fetchOrganizationsToReview();
         } else {
           this.$msg({
@@ -215,26 +243,49 @@ export default {
     },
     rejectOrganization(row) {
       // 驳回志愿组织的审核
-      request.post('/administrator/qualifications/org/reject', JSON.stringify({
-        orgId: row.orgId
-      })).then(res => {
-        if (res.data.code === 0) {
-          this.$msg({
-            message: '驳回志愿组织审核成功',
-            type: 'success',
-            duration: 500
-          });
-          this.fetchOrganizationsToReview();
-        } else {
-          this.$msg({
-            message: '驳回志愿组织审核失败',
-            type: 'error',
-            duration: 500
-          });
-        }
-      }).catch(err => {
-        console.log(err);
+      this.$prompt('请输入驳回理由', '提示', {
+        customClass: 'reject',
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /\S/,
+        inputErrorMessage: '请输入驳回理由'
+      }).then(({value}) => {
+        request.post('/administrator/qualifications/org/reject', JSON.stringify({
+          orgId: row.orgId,
+          reason: value
+        })).then(res => {
+          if (res.data.code === 0) {
+            this.$msg({
+              message: '驳回志愿组织审核成功',
+              type: 'success',
+              duration: 500
+            });
+            location.reload();
+            this.fetchOrganizationsToReview();
+          } else {
+            this.$msg({
+              message: '驳回志愿组织审核失败',
+              type: 'error',
+              duration: 500
+            });
+          }
+        }).catch(err => {
+          console.log(err);
+        });
+      }).catch(() => {
+        this.$msg({
+          type: 'info',
+          message: '取消输入'
+        });
       });
+    },
+    initFilenames() {
+      this.fileNames.push('144823095845864646.doc');
+      this.fileNames.push('154131454676768883.doc');
+      this.fileNames.push('168934304025406056.doc');
+      this.fileNames.push('342265163958849536.doc');
+      this.fileNames.push('353570952728154113.doc');
+      this.fileNames.push('361240044025024512.doc');
     },
     handleVolunteerCurrentPageChange(page) {
       // 处理志愿者列表的页码变化
@@ -246,6 +297,16 @@ export default {
       this.organizationCurrentPage = page;
       this.fetchOrganizationsToReview();
     },
+    downloadFile(id) {
+      const link = document.createElement('a');
+      // 本地路径
+      link.href = 'http://123.56.248.217:9000/doc/' + id;
+      document.body.appendChild(link);
+      // 模拟点击链接以触发下载
+      link.click();
+      // 删除创建的链接元素
+      document.body.removeChild(link);
+    }
   },
 };
 </script>
@@ -282,6 +343,38 @@ export default {
 </style>
 
 <style lang="scss">
+
+.reject {
+  .el-input__inner {
+    width: 300px !important;
+    border: none;
+  }
+
+  .el-input--suffix .el-input__inner {
+    width: 300px !important;
+    border: none;
+  }
+
+  .el-input__icon {
+    height: 100%;
+    border: none;
+  }
+
+  :deep(input) {
+    width: 200px;
+    height: 40px;
+    border: none;
+  }
+
+  .el-button:nth-child(1) {
+    padding-top: 8px;
+  }
+
+  .el-button:nth-child(2) {
+    padding-top: 8px;
+  }
+}
+
 .confirm {
   .el-button:nth-child(1) {
     padding-top: 8px;

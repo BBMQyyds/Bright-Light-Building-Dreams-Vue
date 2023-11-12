@@ -79,15 +79,6 @@ export default {
         if (res.data.code === 0) {
           this.volunteerList = res.data.result.objects;
           this.total = res.data.result.total;
-          // for (let i = 0; i < this.volunteerList.length; i++) {
-          //   //遍历元素的属性
-          //   for (let key in this.volunteerList[i]) {
-          //     //如果元素的属性为null，将其置为'暂无'
-          //     if (typeof this.volunteerList[i][key] === 'undefined' || this.volunteerList[i][key] === null) {
-          //       this.volunteerList[i][key] = '暂无';
-          //     }
-          //   }
-          // }
         } else {
           this.$msg({
             message: '获取志愿者列表失败',

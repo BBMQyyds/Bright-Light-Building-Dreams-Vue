@@ -26,7 +26,7 @@ export default {
       let chart = myEcharts.init(document.getElementById("myEcharts"), "purple-passion");
       chart.setOption({
         title: {
-          text: "资金存储变化量",
+          text: "资金存储变化量(单位：万元)",
           left: "center",
         },
         xAxis: {

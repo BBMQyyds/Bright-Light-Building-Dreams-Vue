@@ -26,7 +26,7 @@ export default {
       let chart = myEcharts.init(document.getElementById("myEcharts"), "purple-passion");
       chart.setOption({
         title: {
-          text: "物资总量变化(单位：)",
+          text: "物资总量变化(单位：万件)",
           left: "center",
         },
         xAxis: {

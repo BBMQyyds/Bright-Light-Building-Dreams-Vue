@@ -2,7 +2,7 @@
 import BarGraph from "@/components/graph/BarGraph.vue";
 import BarGraph2 from "@/components/graph/BarGraph2.vue";
 import BarGraph3 from "@/components/graph/BarGraph3.vue";
-import BarGraph4 from "@/components/graph/BarGraph4.vue";
+import request from "@/api";
 
 export default {
   name: "fund-management",
@@ -10,40 +10,80 @@ export default {
     BarGraph,
     BarGraph2,
     BarGraph3,
-    BarGraph4
   },
-    data() {
-        return {
-            fundingLogList: [] // 在这里存储从后端获取的资金日志数据
-        };
+  data() {
+    return {
+      fundingLogList: [], // 在这里存储从后端获取的资金日志数据
+      currentPage: 1,
+      pageSize: 5, // 默认每页显示10行
+      total: 0,
+    };
+  },
+  created() {
+    this.search();
+  },
+  methods: {
+    search() {
+      request.post('/administrator/log/searchFundingLog', JSON.stringify({
+        pageNo: this.currentPage,
+        pageSize: this.pageSize
+      })).then(res => {
+        this.fundingLogList = res.data.items;
+        this.total = res.data.counts;
+      }).catch(err => {
+        console.log(err);
+      });
     },
-    created() {
-        // 在这里调用后端接口获取资金日志数据，然后赋值给 fundingLogList
-    }
+    handleCurrentPageChange(page) {
+      this.currentPage = page;
+      this.search();
+    },
+  },
 }
 </script>
 
 <template>
-  <div class="graph"></div>
-  <div style="display: flex">
-    <div id="graph1">
-      <BarGraph :height="'460px'" :width="'840px'"></BarGraph>
+  <div>
+    <div class="graph"></div>
+    <div style="display: flex">
+      <div id="graph1">
+        <BarGraph :height="'460px'" :width="'840px'"></BarGraph>
+      </div>
+      <div id="graph2">
+        <BarGraph2 :height="'360px'" :width="'820px'"></BarGraph2>
+      </div>
     </div>
-    <div id="graph2">
-      <BarGraph2 :height="'360px'" :width="'820px'"></BarGraph2>
-    </div>
-  </div>
     <div id="graph3">
       <BarGraph3></BarGraph3>
     </div>
     <div id="table">
-        <el-table id="data-table" :data="fundingLogList" style="width: 100%">
-            <el-table-column prop="change_amonut" label="金额"></el-table-column>
-            <el-table-column prop="descriptions" label="描述"></el-table-column>
-            <el-table-column prop="organization_id" label="捐赠来源"></el-table-column>
-            <el-table-column prop="create_date" label="捐赠日期"></el-table-column>
+      <div>
+        <el-table
+            ref="table"
+            :cell-style="{'text-align': 'center'}"
+            :data="fundingLogList"
+            :header-cell-style="{backgroundColor:'#393E46','text-align':'center'
+        , 'font-size': '15px','color': 'white', 'font-weight': 'normal'}"
+            class="table"
+            style="margin-top: 20px;">
+          <el-table-column label="金额" prop="changeAmonut"></el-table-column>
+          <el-table-column label="描述" prop="descriptions"></el-table-column>
+          <el-table-column label="捐赠来源" prop="organizationName"></el-table-column>
+          <el-table-column label="捐赠日期" prop="createDate"></el-table-column>
         </el-table>
+
+        <p></p>
+        <el-pagination
+            :current-page="currentPage"
+            :page-size="pageSize"
+            :page-sizes="[5, 10, 20, 40]"
+            :total="total"
+            layout="total, prev, pager, next"
+            @current-change="handleCurrentPageChange">
+        </el-pagination>
+      </div>
     </div>
+  </div>
 </template>
 
 <style scoped>
@@ -52,26 +92,50 @@ export default {
 }
 
 #graph1 {
-  margin-left: 50px;
+  margin-left: 80px;
 }
 
 #graph2 {
   margin-top: 50px;
 }
 
-#graph3{
-    margin-left: -50%;
-    margin-top:-12%;
+#graph3 {
+  margin-left: -1080px;
+  margin-top: -125px;
 }
 
-#table{
-    width: 700px;
-    margin-left: 55%;
-    margin-top: -35%;
+#table {
+  width: 800px;
+  margin-left: 920px;
+  margin-top: -600px;
+  z-index: 20000 !important;
 }
 
-#data-table{
-    height: 300px;
+::v-deep .el-table__row {
+  background-color: lightgray;
 }
 
+.table ::v-deep .el-table__body tr:hover > td {
+  background-color: #E6E6E6;
+}
+
+.el-button {
+  padding-top: 8px;
+}
+
+.table {
+  border-radius: 5px;
+}
+
+</style>
+
+<style>
+:deep(.page) {
+  z-index: 2000 !important;
+}
+
+.el-pagination {
+  z-index: 2000 !important;
+  position: relative !important;
+}
 </style>
