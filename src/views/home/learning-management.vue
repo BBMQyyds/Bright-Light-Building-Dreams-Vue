@@ -2,6 +2,7 @@
   <div class="main">
     <TaskCard ref="taskCard"></TaskCard>
     <PublishCard ref="publishCard"></PublishCard>
+    <DetailCard ref="detailCard"></DetailCard>
     <el-row class="row">
       <el-col :span="4">
         <el-input v-model="searchKeyword" class="search" placeholder="搜索任务" @input="search"></el-input>
@@ -76,33 +77,36 @@
       <!-- 根据你的实体类添加其他字段 -->
       <el-table-column label="操作" width="275">
         <template v-slot="scope">
-          <div style="display:inline-block; margin-left: 15px;align-items: center">
-            <el-button size="default" type="warning" @click="editTask(scope.row)">编辑</el-button>
-            <el-button size="default" style="margin-right: 15px" type="danger"
+          <div style="display:inline-block;align-items: center">
+            <el-button size="default" style="margin-right: 5px" type="warning" @click="editTask(scope.row)">编辑
+            </el-button>
+            <el-button size="default" style="margin-right: 5px" type="danger"
                        @click="deleteTask(scope.row)">删除
             </el-button>
+            <el-button size="default" type="primary"
+                       @click="detail(scope.row)">详情
+            </el-button>
             <hr>
-            <div style="text-align: left;">
+            <div style="text-align: left;margin-left: 5px">
               <el-select v-model="scope.row.child_id" multiple placeholder="分配任务给儿童" size="normal">
                 <el-option
-                    v-for="item in childList"
+                    v-for="item in scope.row.childList"
                     :key="item.id"
                     :label="item.name"
                     :value="item.id">
                 </el-option>
               </el-select>
             </div>
-            <hr>
-            <div style="text-align: left;">
-              <el-select v-model="scope.row.volunteer_id" multiple placeholder="分配任务给志愿者" size="normal">
-                <el-option
-                    v-for="item in volunteerList"
-                    :key="item.volId"
-                    :label="item.volName"
-                    :value="item.volId">
-                </el-option>
-              </el-select>
-            </div>
+            <!--            <div style="text-align: left;">-->
+            <!--              <el-select v-model="scope.row.volunteer_id" multiple placeholder="分配任务给志愿者" size="normal">-->
+            <!--                <el-option-->
+            <!--                    v-for="item in volunteerList"-->
+            <!--                    :key="item.volId"-->
+            <!--                    :label="item.volName"-->
+            <!--                    :value="item.volId">-->
+            <!--                </el-option>-->
+            <!--              </el-select>-->
+            <!--            </div>-->
           </div>
         </template>
       </el-table-column>
@@ -126,16 +130,16 @@
 import request, {fileRequest} from "@/api";
 import TaskCard from "@/components/card/TaskCard.vue";
 import PublishCard from "@/components/card/PublishCard.vue";
+import DetailCard from "@/components/card/DetailCard.vue";
 
 export default {
   components: {
     TaskCard,
     PublishCard,
+    DetailCard,
   },
   created() {
     this.search();
-    this.searchChild();
-    this.searchVolunteer();
   },
   data() {
     return {
@@ -143,8 +147,6 @@ export default {
       currentPage: 1,
       pageSize: 5, // 默认每页显示10行
       total: 0,
-      childList: [],
-      volunteerList: [],
       taskList: [],
     };
   },
@@ -225,47 +227,27 @@ export default {
             this.taskList[i].volunteer_id = '';
             this.taskList[i].videoList = [];
             this.taskList[i].photoList = [];
+            request.post('/administrator/user/search/childNotAssign', JSON.stringify({
+              taskId: this.taskList[i].id,
+              page: this.currentPage,
+              size: 100
+            })).then(res => {
+              if (res.data.code === 0) {
+                this.taskList[i].childList = res.data.result.objects;
+              } else {
+                this.$msg({
+                  message: '获取儿童列表失败',
+                  type: 'error',
+                  duration: 500
+                });
+              }
+            }).catch(err => {
+              console.log(err);
+            });
           }
         } else {
           this.$msg({
             message: '获取任务列表失败',
-            type: 'error',
-            duration: 500
-          });
-        }
-      }).catch(err => {
-        console.log(err);
-      });
-    },
-    searchChild() {
-      request.post('/administrator/user/search', JSON.stringify({
-        name: '',
-        page: this.currentPage,
-        size: 100
-      })).then(res => {
-        if (res.data.code === 0) {
-          this.childList = res.data.result.objects;
-        } else {
-          this.$msg({
-            message: '获取儿童列表失败',
-            type: 'error',
-            duration: 500
-          });
-        }
-      }).catch(err => {
-        console.log(err);
-      });
-    },
-    searchVolunteer() {
-      request.post('/administrator/user/volunteer/search', JSON.stringify({
-        page: this.currentPage,
-        size: 100
-      })).then(res => {
-        if (res.data.code === 0) {
-          this.volunteerList = res.data.result.objects;
-        } else {
-          this.$msg({
-            message: '获取志愿者列表失败',
             type: 'error',
             duration: 500
           });
@@ -298,6 +280,9 @@ export default {
       this.$refs.publishCard.publishTask(task);
       // 更新对话框中的表单数据，根据传递的任务信息
     },
+    detail(task) {
+      this.$refs.detailCard.detail(task);
+    },
     save() {
       this.$confirm('此操作将保存分配的任务, 是否继续?', '提示', {
         customClass: 'confirm',
@@ -315,7 +300,7 @@ export default {
               });
             }
             request.post('/administrator/task/assignChild', JSON.stringify({
-              id: this.taskList[i].id,
+              taskId: this.taskList[i].id,
               children: children,
             })).then(res => {
               if (res.data.code !== 0) {
@@ -325,40 +310,46 @@ export default {
               console.log(err);
             });
           }
-          if (this.taskList[i].volunteer_id !== null && this.taskList[i].volunteer_id.length !== 0) {
-            let child = [];
-            for (let j = 0; j < this.taskList[i].volunteer_id.length; j++) {
-              child.push({
-                id: this.taskList[i].volunteer_id[j],
-              });
-            }
-            request.post('/administrator/task/assignVol', JSON.stringify({
-              id: this.taskList[i].id,
-              child: child,
-            })).then(res => {
-              if (res.data.code !== 0) {
-                success = false;
-              }
-            }).catch(err => {
-              console.log(err);
+          // if (this.taskList[i].volunteer_id !== null && this.taskList[i].volunteer_id.length !== 0) {
+          //   let child = [];
+          //   for (let j = 0; j < this.taskList[i].volunteer_id.length; j++) {
+          //     child.push({
+          //       id: this.taskList[i].volunteer_id[j],
+          //     });
+          //   }
+          //   request.post('/administrator/task/assignVol', JSON.stringify({
+          //     id: this.taskList[i].id,
+          //     child: child,
+          //   })).then(res => {
+          //     if (res.data.code !== 0) {
+          //       success = false;
+          //     }
+          //   }).catch(err => {
+          //     console.log(err);
+          //   });
+          // }
+        }
+        setTimeout(() => {
+          if (success) {
+            this.$msg({
+              message: '保存成功',
+              type: 'success',
+              duration: 500
             });
+            setTimeout(() => {
+              location.reload();
+            }, 500);
+          } else {
+            this.$msg({
+              message: '保存失败',
+              type: 'error',
+              duration: 500
+            });
+            setTimeout(() => {
+              location.reload();
+            }, 500);
           }
-        }
-        if (success) {
-          this.$msg({
-            message: '保存成功',
-            type: 'success',
-            duration: 500
-          });
-          location.reload();
-        } else {
-          this.$msg({
-            message: '保存失败',
-            type: 'error',
-            duration: 500
-          });
-          location.reload();
-        }
+        }, 1000);
       }).catch(() => {
         this.$msg({
           message: '已取消保存',

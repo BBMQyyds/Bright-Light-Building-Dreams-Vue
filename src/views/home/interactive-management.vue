@@ -158,21 +158,27 @@ export default {
             });
           }
         }
-        if (success) {
-          this.$msg({
-            message: '保存成功',
-            type: 'success',
-            duration: 500
-          });
-          location.reload();
-        } else {
-          this.$msg({
-            message: '保存失败',
-            type: 'error',
-            duration: 500
-          });
-          location.reload();
-        }
+        setTimeout(() => {
+          if (success) {
+            this.$msg({
+              message: '保存成功',
+              type: 'success',
+              duration: 500
+            });
+            setTimeout(() => {
+              location.reload();
+            }, 500);
+          } else {
+            this.$msg({
+              message: '保存失败',
+              type: 'error',
+              duration: 500
+            });
+            setTimeout(() => {
+              location.reload();
+            }, 500);
+          }
+        }, 500);
       }).catch(() => {
         this.$msg({
           message: '已取消保存',

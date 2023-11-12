@@ -17,12 +17,13 @@
         <el-table-column label="地点" prop="volLocate"></el-table-column>
         <el-table-column label="组织" prop="volOrganization"></el-table-column>
         <el-table-column label="审核">
-          <template slot-scope="scope">
-            <el-switch
-                v-model="scope.row.if_pass"
-                active-color="#13ce66"
-                inactive-color="#ff4949"
-                @change="updateVolunteerPassStatus(scope.row)"/>
+          <template v-slot="scope">
+            <div style="display: flex; justify-content: center;margin-left: 15px">
+              <el-button size="default" style="margin-right: 10px" type="primary"
+                         @click="passVolunteer(scope.row)">通过
+              </el-button>
+              <el-button size="default" type="danger" @click="rejectVolunteer(scope.row)">驳回</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -49,14 +50,18 @@
           class="table"
           style="margin: 20px;">
         <!-- 列定义 -->
-        <el-table-column label="名称" prop="org_name"></el-table-column>
+        <el-table-column label="名称" prop="orgName"></el-table-column>
+        <el-table-column label="地点" prop="orgAddress"></el-table-column>
+        <el-table-column label="介绍" prop="orgIntroduction"></el-table-column>
+        <el-table-column label="人数" prop="orgNumber"></el-table-column>
         <el-table-column label="审核">
-          <template slot-scope="scope">
-            <el-switch
-                v-model="scope.row.org_pass_if"
-                active-color="#13ce66"
-                inactive-color="#ff4949"
-                @change="updateOrganizationPassStatus(scope.row)"/>
+          <template v-slot="scope">
+            <div style="display: flex; justify-content: center;margin-left: 15px">
+              <el-button size="default" style="margin-right: 10px" type="primary"
+                         @click="passOrganization(scope.row)">通过
+              </el-button>
+              <el-button size="default" type="danger" @click="rejectOrganization(scope.row)">驳回</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -96,15 +101,16 @@ export default {
   },
   methods: {
     fetchVolunteersToReview() {
-      // 发起请求获取待审核的志愿者列表，并将结果赋给 volunteerListToReview
       request.post('/administrator/user/volunteer/search', JSON.stringify({
-        ifPass: '0',
-        page: this.currentPage,
+        volName: '',
+        passed: '0',
+        page: this.volunteerCurrentPage,
         size: this.pageSize
       })).then(res => {
         if (res.data.code === 0) {
-          this.volunteerList = res.data.result.objects;
+          this.volunteerListToReview = res.data.result.objects;
           this.volunteerTotal = res.data.result.total;
+          console.log(this.volunteerListToReview);
         } else {
           this.$msg({
             message: '获取志愿者列表失败',
@@ -117,15 +123,118 @@ export default {
       });
     },
     fetchOrganizationsToReview() {
-      // 发起请求获取待审核的志愿组织列表，并将结果赋给 organizationListToReview
+      request.post('/administrator/user/organization/search/', JSON.stringify({
+        orgName: '',
+        passed: '0',
+        page: this.organizationCurrentPage,
+        size: this.pageSize
+      })).then(res => {
+        if (res.data.code === 0) {
+          this.organizationListToReview = res.data.result.objects;
+          this.organizationTotal = res.data.result.total;
+          console.log(this.organizationListToReview);
+        } else {
+          this.$msg({
+            message: '获取志愿组织列表失败',
+            type: 'error',
+            duration: 500
+          });
+        }
+      }).catch(err => {
+        console.log(err);
+      });
     },
-    updateVolunteerPassStatus(volunteer) {
-      // 发起请求更新志愿者的审核状态
-      // volunteer 参数包含志愿者的信息，以及新的审核状态
+    passVolunteer(row) {
+      // 通过志愿者的审核
+      request.post('/administrator/qualifications/vol/pass', JSON.stringify({
+        volId: row.volId
+      })).then(res => {
+        if (res.data.code === 0) {
+          this.$msg({
+            message: '通过志愿者审核成功',
+            type: 'success',
+            duration: 500
+          });
+          this.fetchVolunteersToReview();
+        } else {
+          this.$msg({
+            message: '通过志愿者审核失败',
+            type: 'error',
+            duration: 500
+          });
+        }
+      }).catch(err => {
+        console.log(err);
+      });
     },
-    updateOrganizationPassStatus(organization) {
-      // 发起请求更新志愿组织的审核状态
-      // organization 参数包含组织的信息，以及新的审核状态
+    rejectVolunteer(row) {
+      // 驳回志愿者的审核
+      request.post('/administrator/qualifications/vol/reject', JSON.stringify({
+        volId: row.volId
+      })).then(res => {
+        if (res.data.code === 0) {
+          this.$msg({
+            message: '驳回志愿者审核成功',
+            type: 'success',
+            duration: 500
+          });
+          this.fetchVolunteersToReview();
+        } else {
+          this.$msg({
+            message: '驳回志愿者审核失败',
+            type: 'error',
+            duration: 500
+          });
+        }
+      }).catch(err => {
+        console.log(err);
+      });
+    },
+    passOrganization(row) {
+      // 通过志愿组织的审核
+      request.post('/administrator/qualifications/org/pass', JSON.stringify({
+        orgId: row.orgId
+      })).then(res => {
+        if (res.data.code === 0) {
+          this.$msg({
+            message: '通过志愿组织审核成功',
+            type: 'success',
+            duration: 500
+          });
+          this.fetchOrganizationsToReview();
+        } else {
+          this.$msg({
+            message: '通过志愿组织审核失败',
+            type: 'error',
+            duration: 500
+          });
+        }
+      }).catch(err => {
+        console.log(err);
+      });
+    },
+    rejectOrganization(row) {
+      // 驳回志愿组织的审核
+      request.post('/administrator/qualifications/org/reject', JSON.stringify({
+        orgId: row.orgId
+      })).then(res => {
+        if (res.data.code === 0) {
+          this.$msg({
+            message: '驳回志愿组织审核成功',
+            type: 'success',
+            duration: 500
+          });
+          this.fetchOrganizationsToReview();
+        } else {
+          this.$msg({
+            message: '驳回志愿组织审核失败',
+            type: 'error',
+            duration: 500
+          });
+        }
+      }).catch(err => {
+        console.log(err);
+      });
     },
     handleVolunteerCurrentPageChange(page) {
       // 处理志愿者列表的页码变化
