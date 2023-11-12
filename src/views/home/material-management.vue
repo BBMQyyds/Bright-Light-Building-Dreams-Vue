@@ -10,6 +10,14 @@
             BarGraph2,
             BarGraph3
         },
+        data() {
+            return {
+                fundingLogList: [] // 在这里存储从后端获取的资金日志数据
+            };
+        },
+        created() {
+            // 在这里调用后端接口获取资金日志数据，然后赋值给 fundingLogList
+        }
     }
 </script>
 
@@ -25,6 +33,14 @@
     </div>
     <div id="graph3">
         <BarGraph3></BarGraph3>
+    </div>
+    <div id="table">
+        <el-table id="data-table" :data="fundingLogList" style="width: 100%">
+            <el-table-column prop="change_amonut" label="金额"></el-table-column>
+            <el-table-column prop="descriptions" label="描述"></el-table-column>
+            <el-table-column prop="organization_id" label="捐赠来源"></el-table-column>
+            <el-table-column prop="create_date" label="捐赠日期"></el-table-column>
+        </el-table>
     </div>
 
 </template>
@@ -45,6 +61,17 @@
     #graph3{
         margin-left: -50%;
         margin-top:-12%;
+    }
+
+
+    #table{
+        width: 700px;
+        margin-left: 55%;
+        margin-top: -35%;
+    }
+
+    #data-table{
+        height: 300px;
     }
 
 </style>
